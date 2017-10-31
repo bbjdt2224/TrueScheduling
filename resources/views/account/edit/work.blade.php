@@ -69,18 +69,6 @@
 							</div>
 						</div>
 					</div>
-					<div class="form-group">
-						<label>Course Title</label>
-						<input type="text" class="form-control" name="title[]" value="{{$info[2]}}">
-					</div>
-					<div class="form-group">
-						<label>Building</label>
-						<input type="text" class="form-control" name="building[]" value="{{$info[3]}}">
-					</div>
-					<div class="form-group">
-						<label>Room</label>
-						<input type="text" class="form-control" name="rooms[]" value="{{$info[4]}}">
-					</div>
 					<input type="hidden" name="color[]" value="Grey">
 				</div>
 				<?php $counter++; ?>

@@ -16,7 +16,12 @@ function removeCls(counter){
 
 function addDay(counter){
 	counter++;
-	var newDay = "<div id='day"+counter+"'  class='well'>Date<input type='date' name='date[]' class='form-control'><br/>From<input type='time' name='start[]' class='form-control'><br/>To<input type='time' name='end[]' class='form-control'></div>";
+	if($('#times').val() == 0){
+		var newDay = "<div id='day"+counter+"'  class='well'>Date<input type='date' name='date[]' class='form-control'></div>";
+	}
+	else{
+		var newDay = "<div id='day"+counter+"'  class='well'><div class='extra' id='start"+counter+"'>From<input type='time' name='start[]' class='form-control'><br/></div><div class='extra' id='end"+counter+"'>To<input type='time' name='end[]' class='form-control'><br/></div>Date<input type='date' name='date[]' class='form-control'></div>";
+	}
 	$(newDay).insertAfter($("#day"+(counter-1)));
 	console.log(counter);
 	return counter;
@@ -45,4 +50,19 @@ function removeShift(counter){
 	$('#shift'+counter).remove();
 	counter--;
 	return counter;
+}
+
+function changeTimes(counter){
+	if($('#times').val() == 0){
+		for(var i = 1; i <= counter; i++){
+			$('#start'+i).remove();
+			$('#end'+i).remove();
+			console.log(i);
+		}
+	}
+	else{
+		for(var i = 1; i <= counter; i++){
+			$('#day'+i).prepend("<div id='start"+i+"'>From<input type='time' name='start[]' class='form-control'><br/></div><div id='end"+i+"'>To<input type='time' name='end[]' class='form-control'><br/></div>");
+		}
+	}
 }

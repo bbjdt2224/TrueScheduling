@@ -82,6 +82,22 @@
 			        	}
 					?>
 				@endforeach
+				@foreach(explode('|', Auth::user()->work) as $work)
+					<?php
+						$split = explode('/', $work);
+			        	$days = explode(',', $split[0]);
+			        	$info = explode(',', $split[1]);
+			        	for($i = 0; $i < count($dates); $i ++){
+			        		$lower = strtolower(date('l', strtotime($dates[$i])));
+			        		if(in_array($lower, $days)){
+			        			if($info[1] < $info[0]){
+			        				$info[1] = numberToTime(timeToNumber($info[1]) + 24);
+			        			}
+			        			${$dates[$i]}[] = array($info[0], $info[1]);
+			        		}
+			        	}
+					?>
+				@endforeach
 				@for($i = $earlystart; $i <= $lateend; $i+= 0.5)
 					<tr>
 						<td>{{to12(numberToTime($i))}}</td>

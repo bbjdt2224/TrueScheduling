@@ -2,88 +2,65 @@
 
 @section('content')
     <?php
+        $sunday = array();
         $monday = array();
         $tuesday = array();
         $wednesday = array();
         $thursday = array();
         $friday = array();
+        $saturday = array();
         $begin = 24; 
         $end = 0;
         $classSchedule = explode('|', $schedule->classes);
+        $workSchedule = explode('|', $schedule->work);
+        $dayArray = array("sunday", "monday", "tuesday", "wednesday", "thursday", "friday", "saturday");
         for($i = 0; $i < count($classSchedule); $i ++){
         	$split = explode('/', $classSchedule[$i]);
         	$days = explode(',', $split[0]);
         	$info = explode(',', $split[1]); 
-        	if(in_array('monday', $days)){
-        		$monday[$i][] = $info[0];//start time
-	        	$monday[$i][] = $info[1];//end time
-	        	$monday[$i][] = $info[2];//title
-	        	$monday[$i][] = $info[3];//building
-	        	$monday[$i][] = $info[4];//room
-	        	$monday[$i][] = $info[5];//color
-            if(timeToNumber($info[0]) < $begin){
-              $begin = timeToNumber($info[0]);
+          for($j = 0; $j < 7; $j ++){
+            if(in_array($dayArray[$j], $days)){
+              if($info[1] < $info[0]){
+                $info[1] = numberToTime(timeToNumber($info[1]) + 24);
+              }
+              ${$dayArray[$j]}[$i][] = $info[0];//start time
+              ${$dayArray[$j]}[$i][] = $info[1];//end time
+              ${$dayArray[$j]}[$i][] = $info[2];//title
+              ${$dayArray[$j]}[$i][] = $info[3];//building
+              ${$dayArray[$j]}[$i][] = $info[4];//room
+              ${$dayArray[$j]}[$i][] = $info[5];//color
+              if(timeToNumber($info[0]) < $begin){
+                $begin = timeToNumber($info[0]);
+              }
+              if(timeToNumber($info[1]) > $end){
+                $end = timeToNumber($info[1]);
+              }
             }
-            if(timeToNumber($info[1]) > $end){
-              $end = timeToNumber($info[1]);
+          }
+        }
+        for($i = 0; $i < count($workSchedule); $i ++){
+          $split = explode('/', $workSchedule[$i]);
+          $days = explode(',', $split[0]);
+          $info = explode(',', $split[1]); 
+          for($j = 0; $j < 7; $j ++){
+            if(in_array($dayArray[$j], $days)){
+              if($info[1] < $info[0]){
+                $info[1] = numberToTime(timeToNumber($info[1]) + 24);
+              }
+              ${$dayArray[$j]}[$i][] = $info[0];//start time
+              ${$dayArray[$j]}[$i][] = $info[1];//end time
+              ${$dayArray[$j]}[$i][] = "Work";//title
+              ${$dayArray[$j]}[$i][] = " ";//building
+              ${$dayArray[$j]}[$i][] = " ";//room
+              ${$dayArray[$j]}[$i][] = $info[2];//color
+              if(timeToNumber($info[0]) < $begin){
+                $begin = timeToNumber($info[0]);
+              }
+              if(timeToNumber($info[1]) > $end){
+                $end = timeToNumber($info[1]);
+              }
             }
-        	}
-        	if(in_array('tuesday', $days)){
-        		$tuesday[$i][] = $info[0];//start time
-	        	$tuesday[$i][] = $info[1];//end time
-	        	$tuesday[$i][] = $info[2];//title
-	        	$tuesday[$i][] = $info[3];//building
-	        	$tuesday[$i][] = $info[4];//room
-	        	$tuesday[$i][] = $info[5];//color
-            if(timeToNumber($info[0]) < $begin){
-              $begin = timeToNumber($info[0]);
-            }
-            if(timeToNumber($info[1]) > $end){
-              $end = timeToNumber($info[1]);
-            }
-        	}
-        	if(in_array('wednesday', $days)){
-        		$wednesday[$i][] = $info[0];//start time
-	        	$wednesday[$i][] = $info[1];//end time
-	        	$wednesday[$i][] = $info[2];//title
-	        	$wednesday[$i][] = $info[3];//building
-	        	$wednesday[$i][] = $info[4];//room
-	        	$wednesday[$i][] = $info[5];//color
-            if(timeToNumber($info[0]) < $begin){
-              $begin = timeToNumber($info[0]);
-            }
-            if(timeToNumber($info[1]) > $end){
-              $end = timeToNumber($info[1]);
-            }
-        	}
-        	if(in_array('thursday', $days)){
-        		$thursday[$i][] = $info[0];//start time
-	        	$thursday[$i][] = $info[1];//end time
-	        	$thursday[$i][] = $info[2];//title
-	        	$thursday[$i][] = $info[3];//building
-	        	$thursday[$i][] = $info[4];//room
-	        	$thursday[$i][] = $info[5];//color
-            if(timeToNumber($info[0]) < $begin){
-              $begin = timeToNumber($info[0]);
-            }
-            if(timeToNumber($info[1]) > $end){
-              $end = timeToNumber($info[1]);
-            }
-        	}
-        	if(in_array('friday', $days)){
-        		$friday[$i][] = $info[0];//start time
-	        	$friday[$i][] = $info[1];//end time
-	        	$friday[$i][] = $info[2];//title
-	        	$friday[$i][] = $info[3];//building
-	        	$friday[$i][] = $info[4];//room
-	        	$friday[$i][] = $info[5];//color
-            if(timeToNumber($info[0]) < $begin){
-              $begin = timeToNumber($info[0]);
-            }
-            if(timeToNumber($info[1]) > $end){
-              $end = timeToNumber($info[1]);
-            }
-        	}
+          }
         }
 
         function getDecimal($n){
@@ -108,6 +85,9 @@
        }
 
        function to12($n){
+        if(timeToNumber($n) >= 24){
+          $n = numberToTime(timeToNumber($n) - 24);
+        }
        		$newtime = date("g:i a", strtotime($n));
        		return $newtime;
        }
@@ -115,20 +95,22 @@
     <table class="table">
     	<thead>
     		<th></th>
+        <th>Sunday</th>
     		<th>Monday</th>
     		<th>Tuesday</th>
     		<th>Wednesday</th>
     		<th>Thursday</th>
     		<th>Friday</th>
+        <th>Saturday</th>
     	</thead>
     	<tbody>
     		@for($i = $begin; $i <= $end; $i+= 0.5)
     			<tr>
     				<td>{{to12(numberToTime($i))}}</td>
     				<?php
-						$week = array("monday", "tuesday", "wednesday", "thursday", "friday");
+						$week = array("sunday","monday", "tuesday", "wednesday", "thursday", "friday", "saturday");
     				?>
-					@for($j = 0; $j < 5; $j ++)
+					@for($j = 0; $j < 7; $j ++)
 						<?php $isclass = 0;?>
 						@foreach(${$week[$j]} as $times)
 							<?php  

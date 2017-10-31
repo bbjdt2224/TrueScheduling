@@ -48,7 +48,7 @@
 			}
 		}
 	?>
-	<form method="post" action="{{route('save')}}">
+	<form method="post" action="{{route('edit')}}">
 		{{ csrf_field()}}
 		<input type="hidden" value="{{$event->days}}" name="dates">
 		<input type="hidden" value="{{$event->id}}" name="id">
@@ -82,6 +82,31 @@
 			        	}
 					?>
 				@endforeach
+				@foreach(explode('|', Auth::user()->work) as $work)
+					<?php
+						$split = explode('/', $work);
+			        	$days = explode(',', $split[0]);
+			        	$info = explode(',', $split[1]);
+			        	for($i = 0; $i < count($dates); $i ++){
+			        		$lower = strtolower(date('l', strtotime($dates[$i])));
+			        		if(in_array($lower, $days)){
+			        			if($info[1] < $info[0]){
+			        				$info[1] = numberToTime(timeToNumber($info[1]) + 24);
+			        			}
+			        			${$dates[$i]}[] = array($info[0], $info[1]);
+			        		}
+			        	}
+					?>
+				@endforeach
+				<?php
+					$index = array_search(Auth::id(), explode(',', $event->responded));
+					$checked = array();
+				?>
+				@foreach(explode('/', explode('|', $event->results)[$index]) as $day)
+					<?php
+						$checked[] = explode(',', $day);
+					?>
+				@endforeach
 				@for($i = $earlystart; $i <= $lateend; $i+= 0.5)
 					<tr>
 						<td>{{to12(numberToTime($i))}}</td>
@@ -102,7 +127,11 @@
 							@if(timeToNumber($starts[$counter]) <= $i && $i <= timeToNumber($ends[$counter]) && $inclass == 0)
 								<td>
 									<div class="checkbox">
-										<label><input type="checkbox" value="{{$i}}" name="{{$day}}[]"></label>
+										@if(in_array($i, $checked[$counter]))
+											<label><input type="checkbox" value="{{$i}}" name="{{$day}}[]" checked="checked"></label>
+										@else
+											<label><input type="checkbox" value="{{$i}}" name="{{$day}}[]"></label>
+										@endif
 									</div>
 								</td>
 							@else
@@ -114,6 +143,6 @@
 				@endfor
 			</tbody>
 		</table>
-		<button time="submit" class="btn btn-primary">Submit</button>
+		<button time="submit" class="btn btn-primary">Edit</button>
 	</form>
 @endsection

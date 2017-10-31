@@ -48,10 +48,13 @@
 				@foreach($futureevents as $event)
 					<li class="list-group-item" style="height: 60px;">
 						{{$event->name}}
+						@if($group->open == 1 || $group->lead == Auth::id())
+							<a href="{{route('viewResults', ['id' => $event->id])}}" class="btn btn-primary" style="float:right;">View Results</a>
+						@endif
 						@if(!in_array(Auth::id(), explode(',', $event->responded)))
-							<a href="{{route('openEvent', ['id' => $event->id])}}" class="btn btn-primary" style="float:right;">Open</a>
+							<a href="{{route('openEvent', ['id' => $event->id])}}" class="btn btn-primary" style="float:right; width: 100px;">Open</a>
 						@else
-							<a href="#" class="btn btn-primary" style="float:right;">Edit</a>
+							<a href="{{route('editEvent', ['id' => $event->id])}}" class="btn btn-primary" style="float:right; width: 100px;">Edit</a>
 						@endif
 					</li>
 				@endforeach

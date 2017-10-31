@@ -66,7 +66,7 @@ class HomeController extends Controller
                 $work .= request('days')[$i][$j].",";
             }
             $work .= request('days')[$i][(count(request('days')[$i])-1)];
-            $work .= "/".request('starttime')[$i].",".request('endtime')[$i].",";
+            $work .= "/".request('starttime')[$i].",".request('endtime')[$i];
             $work .= ",".request('color')[$i];
             if($i < count(request('days'))-1){
                 $work .= "|";

@@ -49,4 +49,10 @@ Route::post('/addFutureEvent', 'FutureEventsController@add')->name('addFuture');
 
 Route::get('/openEvent/{id}', 'FutureEventsController@openEvent')->name('openEvent');
 
+Route::get('/editEvent/{id}', 'FutureEventsController@editEvent')->name('editEvent');
+
+Route::get('/viewResults/{id}', 'FutureEventsController@viewResults')->name('viewResults');
+
 Route::post('save', 'FutureEventsController@save')->name('save');
+
+Route::post('edit', 'FutureEventsController@edit')->name('edit');

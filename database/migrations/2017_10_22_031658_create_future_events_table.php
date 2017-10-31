@@ -19,7 +19,7 @@ class CreateFutureEventsTable extends Migration
             $table->text('days');
             $table->text('times');
             $table->string('name')->default(" ");
-            $table->string('description');
+            $table->string('description')->nullable();
             $table->text('responded')->nullable();
             $table->text('results')->nullable();
             $table->timestamps();
