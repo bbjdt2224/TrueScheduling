@@ -9,29 +9,40 @@
 	</div>
 	<br/>
 	@if($group->open == 1 || $group->lead == Auth::id())
-		<a href="{{route('addFutureEvent', ['id' => $group->id])}}" class="btn btn-primary">Ask for times</a>
+		<a href="{{route('addFutureEvent', ['id' => $group->id])}}" class="btn btn-primary">Plan Event</a>
 		<a href="{{route('addEvent', ['id' => $group->id])}}" class="btn btn-primary">Add Event</a>
+		<a href="{{route('addVoulenteer', ['id' => $group->id])}}" class="btn btn-primary">Ask for Voulenteers</a>
 	@endif
 	<br/>
 	<br/>
 	<ul class="nav nav-tabs">
 		@if($page == "pending")
 			<li class="active"><a href="{{route('groupHome', ['id' => $group->id, 'page' => "pending"])}}">Pending Events</a></li>
+			<li><a href="{{route('groupHome', ['id' => $group->id, 'page' => "voulenteer"])}}">Voulenteering</a></li>
+	    	<li><a href="{{route('groupHome', ['id' => $group->id, 'page' => "upcoming"])}}">Upcoming Events</a></li>
+	    	<li><a href="{{route('groupHome', ['id' => $group->id, 'page' => "calendar"])}}">Calendar</a></li>
+	    	<li><a href="{{route('groupHome', ['id' => $group->id, 'page' => "group"])}}">Group Schedule</a></li>
+	    @elseif($page == "voulenteer")
+			<li><a href="{{route('groupHome', ['id' => $group->id, 'page' => "pending"])}}">Pending Events</a></li>
+			<li class="active"><a href="{{route('groupHome', ['id' => $group->id, 'page' => "voulenteer"])}}">Voulenteering</a></li>
 	    	<li><a href="{{route('groupHome', ['id' => $group->id, 'page' => "upcoming"])}}">Upcoming Events</a></li>
 	    	<li><a href="{{route('groupHome', ['id' => $group->id, 'page' => "calendar"])}}">Calendar</a></li>
 	    	<li><a href="{{route('groupHome', ['id' => $group->id, 'page' => "group"])}}">Group Schedule</a></li>
 		@elseif($page == "upcoming")
 			<li><a href="{{route('groupHome', ['id' => $group->id, 'page' => "pending"])}}">Pending Events</a></li>
+			<li>><a href="{{route('groupHome', ['id' => $group->id, 'page' => "voulenteer"])}}">Voulenteering</a></li>
 	    	<li class="active"><a href="{{route('groupHome', ['id' => $group->id, 'page' => "upcoming"])}}">Upcoming Events</a></li>
 	    	<li><a href="{{route('groupHome', ['id' => $group->id, 'page' => "calendar"])}}">Calendar</a></li>
 	    	<li><a href="{{route('groupHome', ['id' => $group->id, 'page' => "group"])}}">Group Schedule</a></li>
 	    @elseif($page == "calendar")
 	    	<li><a href="{{route('groupHome', ['id' => $group->id, 'page' => "pending"])}}">Pending Events</a></li>
+	    	<li><a href="{{route('groupHome', ['id' => $group->id, 'page' => "voulenteer"])}}">Voulenteering</a></li>
 	    	<li><a href="{{route('groupHome', ['id' => $group->id, 'page' => "upcoming"])}}">Upcoming Events</a></li>
 	    	<li class="active"><a href="{{route('groupHome', ['id' => $group->id, 'page' => "calendar"])}}">Calendar</a></li>
 	    	<li><a href="{{route('groupHome', ['id' => $group->id, 'page' => "group"])}}">Group Schedule</a></li>
 	    @elseif($page == "group")
 	    	<li><a href="{{route('groupHome', ['id' => $group->id, 'page' => "pending"])}}">Pending Events</a></li>
+	    	<li><a href="{{route('groupHome', ['id' => $group->id, 'page' => "voulenteer"])}}">Voulenteering</a></li>
 	    	<li><a href="{{route('groupHome', ['id' => $group->id, 'page' => "upcoming"])}}">Upcoming Events</a></li>
 	    	<li><a href="{{route('groupHome', ['id' => $group->id, 'page' => "calendar"])}}">Calendar</a></li>
 	    	<li class="active"><a href="{{route('groupHome', ['id' => $group->id, 'page' => "group"])}}">Group Schedule</a></li>
@@ -56,6 +67,23 @@
 						@else
 							<a href="{{route('editEvent', ['id' => $event->id])}}" class="btn btn-primary" style="float:right; width: 100px;">Edit</a>
 						@endif
+					</li>
+				@endforeach
+			@endif
+		</ul>
+	  @elseif($page == "voulenteer")
+	  	<ul class="list-group">
+	  		@if(isset($voulenteers->name))
+				<li class="list-group-item">
+					There are no voulenteering opportunities
+				</li>
+			@else
+				@foreach($voulenteers as $event)
+					<li class="list-group-item" style="height: 60px;">
+						{{$event->name}}
+							<a href="{{route('openVoulenteer', ['id' => $event->id])}}" class="btn btn-primary" style="float:right; width: 100px;">
+								Open
+							</a>
 					</li>
 				@endforeach
 			@endif
@@ -88,6 +116,8 @@
 				$startdayofweek = date('w', strtotime(date('01-m-Y', time())));
 				$daysinmonth = date('t', time());
 				$endofdate = date('Y-m-', time());
+				$month = date('m', time());
+				$year = date('Y', time());
 				$dates = array();
 				$names = array();
 				$descriptions = array();
@@ -98,7 +128,23 @@
 					$j = 0;
 				}
 			?>
+			<script type="text/javascript">
+				var month = {{$month}}-1;
+				var year = {{$year}};
+				var dates = "{{implode(',',$dates)}}";
+				dates = dates.split(',');
+				var names = "{{implode(',', $names)}}";
+				names = names.split(',');
+				console.log(names);
+				var descriptions = "{{implode(',', $descriptions)}}";
+				descriptions = descriptions.split(',');
+			</script>
 			<table class="table">
+				<caption style="text-align: center;">
+					<span style="float: left" class="btn btn-default" id="prevMonth"> << </span>
+					<span style="font-size: 20px;" id="title">{{date('F Y', time())}}</span>
+					<span style="float: right;" class="btn btn-default" id="nextMonth"> >> </span>
+				</caption>
 				<thead>
 					<th>Sunday</th>
 					<th>Monday</th>
@@ -111,18 +157,25 @@
 				<tbody>
 					<tr>
 						@for($i = 0; $i < $startdayofweek; $i ++)
-							<td></td>
+							<td id="{{$i}}"></td>
 						@endfor
 						@for($i = 1; $i <= $daysinmonth; $i ++)
-							@if(in_array($endofdate.$i, $dates))
-								<td style="background-color: cyan;"><a href="#" data-toggle="popover" title="{{$names[$j]}}" data-content="{{$descriptions[$j]}}">{{$i}}</a></td>
+							@if($index = array_search(($endofdate.sprintf('%02d', $i)), $dates))
+								<td style="background-color: cyan;" id="{{($startdayofweek + $i - 1)}}">
+									<a href="#" data-toggle="popover" title="{{$names[$index]}}" data-content="{{$descriptions[$index]}}">
+										{{sprintf('%02d', $i)}}
+									</a>
+								</td>
 								<?php $j++; ?>
 							@else
-								<td>{{$i}}</td>
+								<td id="{{($startdayofweek + $i - 1)}}">{{sprintf('%02d', $i)}}</td>
 							@endif
 							@if( (($i + $startdayofweek) % 7) == 0 )
 								</tr><tr>
 							@endif
+						@endfor
+						@for($i = 0; $i < (7-(($startdayofweek+$daysinmonth)%7)); $i++)
+							<td id="{{$startdayofweek+$daysinmonth+$i}}"></td>
 						@endfor
 					</tr>
 				</tbody>
@@ -247,9 +300,5 @@
 				</tbody>
 			</table>
 		@endif
-		<script>
-			$(document).ready(function(){
-			    $('[data-toggle="popover"]').popover(); 
-			});
-		</script>
+		<script src="{{asset('js/calendar.js')}}"></script>
 @endsection

@@ -23,6 +23,7 @@ class CreateFutureEventsTable extends Migration
             $table->text('responded')->nullable();
             $table->text('results')->nullable();
             $table->timestamps();
+            $table->softDeletes();
         });
     }
 

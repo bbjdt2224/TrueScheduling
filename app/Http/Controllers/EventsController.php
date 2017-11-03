@@ -5,6 +5,7 @@ namespace App\Http\Controllers;
 use Illuminate\Http\Request;
 
 use App\Events;
+use App\FutureEvents;
 
 class EventsController extends Controller
 {
@@ -26,6 +27,10 @@ class EventsController extends Controller
     		'name' => request('name'),
     		'description' => request('description'),
     	]);
+
+        if(request('future') == 1){
+            FutureEvents::find(request('id'))->delete();
+        }
 
     	return redirect(route('groupHome', ['id' => request('group'), 'page' => "pending"]));
     }

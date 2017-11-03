@@ -9,6 +9,7 @@ use App\Groups;
 use App\User;
 use App\Events;
 use App\FutureEvents;
+use App\Voulenteer;
 
 class GroupsController extends Controller
 {
@@ -92,13 +93,14 @@ class GroupsController extends Controller
         $day = date('l', time());
     	$events = Events::where('group', '=', $id)->get();
         $futureevents = FutureEvents::where('group', '=', $id)->get();
+        $voulenteers = Voulenteer::where('group', '=', $id)->get();
     	$group = Groups::find($id);
         $members = array();
         foreach(explode(',', $group->groupmembers) as $member){
             $members[] = User::find($member);
         }
 
-    	return view('group.groupHome', compact('group', 'events', 'page', 'members','day', 'futureevents'));
+    	return view('group.groupHome', compact('group', 'events', 'page', 'members','day', 'futureevents', 'voulenteers'));
     }
 
     public function changeDay($id, $page){

@@ -21,10 +21,11 @@ class FutureEventsController extends Controller
     }
 
     public function add(){
-    	$days = implode(',', request('date'));
+    	$days = request('dates');
+        $dates = explode(',', request('dates'));
     	$times = array();
         if(request('time') == 0){
-            for($i = 0; $i < count(request('date')); $i++){
+            for($i = 0; $i < count($dates); $i++){
                 $times[] = request('start')[0].','.request('end')[0];
             }
         }
@@ -65,7 +66,9 @@ class FutureEventsController extends Controller
         $dates = explode(',', request('dates'));
         $response = "";
         for($i = 0; $i < count($dates); $i ++){
-            $response .= implode(',', request($dates[$i]));
+            if(request($dates[$i]) != null){
+                $response .= implode(',', request($dates[$i]));
+            }
             if($i < (count($dates)-1)){
                 $response .= '/';
             }

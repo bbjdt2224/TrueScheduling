@@ -141,7 +141,7 @@
 								</div>
     							<?php $isclass=1;?>
     						@elseif($start < $i && $i <= $end)
-    							<td style="background-color:{{$times[5]}};"></td>
+    							<td style="background-color:{{$times[5]}}; border-top: none;"></td>
     							<?php $isclass=1;?>
     						@endif
     					@endforeach

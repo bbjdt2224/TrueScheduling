@@ -9,7 +9,7 @@
 			background-color: #1E90FF;
 		}
 	</style>
-	<form method='post' action='{{route('addFuture')}}' class="form-horizontal" id="form">
+	<form method='post' action='{{route('addVoulenteerEvent')}}' class="form-horizontal" id="form">
 		{{ csrf_field()}}
 		<div class="row">
 			<div class="col-md-8">
@@ -20,7 +20,7 @@
 				<script type="text/javascript">
 					var month = {{$month}}-1;
 					var year = {{$year}};
-					var v = 0;
+					var v = 1;
 				</script>
 				<table class='table'>
 					<caption style="text-align: center;">
@@ -57,12 +57,12 @@
 							@endfor
 							@for($i = 0; $i < (7-((date('t', time())+$firstday)%7)); $i ++)
 								<td>
-									<label id="{{(date('t', time())+$firstday)+$i}}" onclick="addCheck(this, month, year);" class="btn"></label>
+									<label id="{{(date('t', time())+$firstday)+$i}}" onclick="addCheck(this, month, year); " class="btn"></label>
 								</td>
 							@endfor
 						</tr>
 						<tr>
-							@for($i = 35; $i <= 42 ; $i ++)
+							@for($i = 35; $i < 42 ; $i ++)
 								<td>
 									<label id="{{$i}}" onclick="addCheck(this, month, year);" class="btn"></label>
 								</td>
@@ -72,28 +72,15 @@
 				</table>
 			</div>
 			<div class="col-md-4 well" id="dates"  style="text-align: center;">
-				<select name="time" class="form-control" id="times" onchange="changeTimes(counter)">
-					<option value="0">Same Time</option>
-					<option value="1">Diffrent Times</option>
-				</select>
 				<h3>Dates</h3>
 				<hr/>
-				<div class="row" id="same">
-					<div class="col-sm-2">From</div>
-					<div class="col-sm-10">
-						<input type="time" name="start[]" class="form-control">
-					</div>
-					<div class="col-sm-2">To</div>
-					<div class="col-sm-10">
-						<input type="time" name="end[]" class="form-control">
-						<br/>
-					</div>
-				</div>
 			</div>
 		</div>
 		<input type="hidden" name="group" value="{{$id}}">
 		<input type="hidden" name="dates" id="d" value=" ">
-		<br/>
+		<input type="hidden" name="numofshifts" id="s" value=" ">
+		Number of People Per Time Slot
+		<input type="number" name="number" class="form-control">
 		Event Name
 		<input type="text" name="name" class="form-control">
 		<br>

@@ -14,27 +14,6 @@ function removeCls(counter){
 	return counter;
 }
 
-function addDay(counter){
-	counter++;
-	if($('#times').val() == 0){
-		var newDay = "<div id='day"+counter+"'  class='well'>Date<input type='date' name='date[]' class='form-control'></div>";
-	}
-	else{
-		var newDay = "<div id='day"+counter+"'  class='well'><div class='extra' id='start"+counter+"'>From<input type='time' name='start[]' class='form-control'><br/></div><div class='extra' id='end"+counter+"'>To<input type='time' name='end[]' class='form-control'><br/></div>Date<input type='date' name='date[]' class='form-control'></div>";
-	}
-	$(newDay).insertAfter($("#day"+(counter-1)));
-	console.log(counter);
-	return counter;
-}
-
-function removeDay(counter){
-	if(counter == 0){
-		return counter;
-	}
-	$('#day'+counter).remove();
-	counter--;
-	return counter;
-}
 
 function addShift(counter){
 	counter++;
@@ -52,17 +31,175 @@ function removeShift(counter){
 	return counter;
 }
 
+var selected = [];
+var shifts = [];
+
+function insert(item, index){
+	var times = '<div class="row" id="day'+item+'"><div class="col-sm-2">From</div><div class="col-sm-10"><input type="time" name="start[]" class="form-control"></div><div class="col-sm-2">To</div><div class="col-sm-10"><input type="time" name="end[]" class="form-control"><br/></div></div';
+	$(times).insertAfter($('#'+item));
+}
+
+function remove(item, index){
+	$('#day'+item).remove();
+}
+
 function changeTimes(counter){
 	if($('#times').val() == 0){
-		for(var i = 1; i <= counter; i++){
-			$('#start'+i).remove();
-			$('#end'+i).remove();
-			console.log(i);
+		selected.forEach(remove);
+		var string = '<div class="row" id="same"><div class="col-sm-2">From</div><div class="col-sm-10"><input type="time" name="start[]" class="form-control"></div><div class="col-sm-2">To</div><div class="col-sm-10"><input type="time" name="end[]" class="form-control"><br/></div></div>';
+		$(string).insertAfter($("hr"));
+	}
+	else{
+		selected.forEach(insert);
+		$('#same').remove();
+	}
+}
+
+var monthNames = ["January", "February", "March", "April", "May", "June",
+  "July", "August", "September", "October", "November", "December"
+];
+
+function addCheck(cell, month, year){
+	month = month + 1;
+	if(!$(cell).hasClass('check')){
+		selected.push(year+"-"+month+"-"+( $(cell).text()));
+        shifts.push(1);
+        if(v == 0){
+            $('#dates').append("<p id='"+year+"-"+month+"-"+( $(cell).text())+"'>"+$(cell).text()+"/"+month+"/"+year+"</p>");
+        }
+        else{
+            $('#dates').append("<p id='"+year+"-"+month+"-"+( $(cell).text())+"'>"+$(cell).text()+"/"+month+"/"+year+"<span style='float: right;' class='btn btn-default' data-id='day"+year+'-'+month+'-'+( $(cell).text())+"' onclick='removeTimes(this)'>-</span><span style='float: right;' class='btn btn-default' data-id='day"+year+'-'+month+'-'+( $(cell).text())+"' onclick='addTimes(this)'>+</span></p>");
+            
+        }
+		if($('#times').val() != 0){
+			$('#dates').append('<div class="row" id="day'+year+"-"+month+"-"+( $(cell).text())+'"><div class="col-sm-2">From</div><div class="col-sm-10"><input type="time" name="start[]" class="form-control"></div><div class="col-sm-2">To</div><div class="col-sm-10"><input type="time" name="end[]" class="form-control"><br/></div></div>');
 		}
 	}
 	else{
-		for(var i = 1; i <= counter; i++){
-			$('#day'+i).prepend("<div id='start"+i+"'>From<input type='time' name='start[]' class='form-control'><br/></div><div id='end"+i+"'>To<input type='time' name='end[]' class='form-control'><br/></div>");
-		}
+		var index = selected.indexOf($(cell).text()+month+year);
+		selected.splice(index);
+        shifts.splice(index);
+		$('#'+year+"-"+month+"-"+( $(cell).text())).remove();
+		$('#day'+year+"-"+month+"-"+( $(cell).text())).remove();
+
 	}
+	$(cell).toggleClass("check");
 }
+
+function addTimes(button){
+    var times = '<div class="row" id="'+$(button).attr('data-id')+'"><div class="col-sm-2">From</div><div class="col-sm-10"><input type="time" name="start[]" class="form-control"></div><div class="col-sm-2">To</div><div class="col-sm-10"><input type="time" name="end[]" class="form-control"><br/></div></div>';
+    $(times).insertAfter($('#'+ $(button).attr('data-id')));
+    var index = selected.indexOf($(button).attr('data-id').substring(3));
+    shifts[index]++;
+}
+
+function removeTimes(button){
+    $('#'+ $(button).attr('data-id')).remove();
+    var index = selected.indexOf($(button).attr('data-id').substring(3));
+    shifts[index]--;
+}
+
+function insertDates(){
+	$('#d').val(selected.join(','));
+    $('#s').val(shifts.join(','));
+	$('#form').submit();
+}
+
+function selectDate(day, date, time){
+    $('.selected').each(function() {
+        $(this).removeClass('selected')
+    });
+    $(day).addClass('selected');
+    $('#date').val(date);
+    $('#time').val(time);
+}
+
+$( document ).ready(function() {
+
+    $('#prevMonth').click(function() {
+    	if(month > 0){
+    		month--;
+    	}
+    	else{
+    		month = 11;
+    		year--;
+    	}
+    	var d = new Date(year, month, 0);
+    	var daysInMonth = d.getDate();
+    	var d = new Date(year, month, 1);
+    	var startDay = d.getDay();
+    	for(var i = 1; i <= daysInMonth; i ++){
+    		$("#"+((i+startDay)-1)).removeClass('check');
+    		if(i < 10){
+    			$("#"+((i+startDay)-1)).text("0"+i);
+    			if(selected.indexOf(year+'-'+(month+1)+"-0"+i) >= 0){
+	    			$("#"+((i+startDay)-1)).addClass("check");
+	    		}
+    		}
+    		else{
+    			$("#"+((i+startDay)-1)).text(i);
+    			if(selected.indexOf(year+'-'+(month+1)+"-"+i) >= 0){
+	    			$("#"+((i+startDay)-1)).addClass("check");
+	    		}
+    		}
+    		if(!$("#"+((i+startDay)-1)).hasClass('btn-default')){
+    			$("#"+((i+startDay)-1)).addClass('btn-default');
+    		}
+    	}
+    	$('#title').text(monthNames[month]+" "+year);
+    	for(var i = 0; i < startDay; i ++){
+    		$("#"+i).text("");
+    		$("#"+i).removeClass('btn-default');
+    		$("#"+i).removeClass('check');
+    	}
+    	for(var i = (startDay+daysInMonth); i <= 42; i++){
+    		$("#"+i).text("");
+    		$("#"+i).removeClass('btn-default');
+    		$("#"+i).removeClass('check');
+    	}
+    });
+
+    $('#nextMonth').click(function() {
+    	if(month < 11){
+    		month++;
+    	}
+    	else{
+    		month = 0;
+    		year++;
+    	}
+    	var d = new Date(year, month, 0);
+    	var daysInMonth = d.getDate();
+    	var d = new Date(year, month, 1);
+    	var startDay = d.getDay();
+    	for(var i = 1; i <= daysInMonth; i ++){
+    		$("#"+((i+startDay)-1)).removeClass('check');
+    		if(i < 10){
+    			$("#"+((i+startDay)-1)).text("0"+i);
+    			if(selected.indexOf(year+'-'+(month+1)+"-0"+i) >= 0){
+	    			$("#"+((i+startDay)-1)).addClass("check");
+	    		}
+    		}
+    		else{
+    			$("#"+((i+startDay)-1)).text(i);
+    			if(selected.indexOf(year+'-'+(month+1)+"-"+i) >= 0){
+	    			$("#"+((i+startDay)-1)).addClass("check");
+	    		}
+    		}
+
+    		if(!$("#"+((i+startDay)-1)).hasClass('btn-default')){
+    			$("#"+((i+startDay)-1)).addClass('btn-default');
+    		}
+    	}
+    	$('#title').text(monthNames[month]+" "+year);
+    	for(var i = 0; i < startDay; i ++){
+    		$("#"+i).text("");
+    		$("#"+i).removeClass('btn-default');
+    		$("#"+i).removeClass('check');
+    	}
+    	for(var i = (startDay+daysInMonth); i <= 42; i++){
+    		$("#"+i).text("");
+    		$("#"+i).removeClass('btn-default');
+    		$("#"+i).removeClass('check');
+    	}
+    });
+});

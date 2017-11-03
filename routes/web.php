@@ -53,6 +53,12 @@ Route::get('/editEvent/{id}', 'FutureEventsController@editEvent')->name('editEve
 
 Route::get('/viewResults/{id}', 'FutureEventsController@viewResults')->name('viewResults');
 
-Route::post('save', 'FutureEventsController@save')->name('save');
+Route::post('/save', 'FutureEventsController@save')->name('save');
 
-Route::post('edit', 'FutureEventsController@edit')->name('edit');
+Route::post('/edit', 'FutureEventsController@edit')->name('edit');
+
+Route::get('/addVoulenteer/{id}', 'VoulenteerController@addEvent')->name('addVoulenteer');
+
+Route::post('/addVoulenteer', 'VoulenteerController@add')->name('addVoulenteerEvent');
+
+Route::get('/openVoulenteer/{id}', 'VoulenteerController@open')->name('openVoulenteer');

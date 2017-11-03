@@ -1,6 +1,11 @@
 @extends('layouts.app')
 
 @section('content')
+    <style>
+        .selected{
+            background-color: #1E90FF;
+        }
+    </style>
     <?php
 
     	function getDecimal($n){
@@ -62,14 +67,17 @@
         ?>
         @for($i = 0; $i < count($days); $i ++)
             @foreach(explode(',', $days[$i]) as $time)
-                <?php
-                    ${$dayArray[$i]}[$time*10]++;
-                ?>
+                @if(is_numeric($time))
+                    <?php
+                        ${$dayArray[$i]}[$time*10]++;
+                    ?>
+                @endif
             @endforeach
         @endfor
     @endforeach
     <table class="table">
         <thead>
+            <th>Time</th>
             @foreach($dayArray as $day)
                 <th>
                     {{date('l', strtotime($day))}}
@@ -81,11 +89,34 @@
         <tbody>
             @for($i = $earlystart; $i <= $lateend; $i+=0.5)
                 <tr>
+                    <td>{{to12(numberToTime($i))}}</td>
                     @foreach($dayArray as $day)
-                        <td>{{${$day}[$i*10]}}</td>
+                        @if(${$day}[$i*10] > 0)
+                            <td><label onclick="selectDate(this, '{{$day}}', '{{(numberToTime($i))}}');" class="btn btn-default">{{${$day}[$i*10]}}</label></td>
+                        @else
+                            <td>{{${$day}[$i*10]}}</td>
+                        @endif
                     @endforeach
                 </tr>
             @endfor
         </tbody>
     </table>
+    <form class="form-horizontal" action="{{route('add')}}" method="post">
+        {{ csrf_field()}}
+        <div class="form-group">
+            <label for="date">Date: </label>
+            <input type="date" class="form-control" id="date" name="date">
+        </div>
+        <div class="form-group">
+            <label for="time">Time: </label>
+            <input type="time" class="form-control" id="time" name="time">
+        </div>
+        <input type="hidden" name="id" value="{{$event->id}}">
+        <input type="hidden" name="group" value="{{$event->group}}">
+        <input type="hidden" name="name" value="{{$event->name}}">
+        <input type="hidden" name="description" value="{{$event->description}}">
+        <input type="hidden" name="future" value="1">
+        <button type="submit" class="btn btn-default">Set Event</button>
+    </form>
+    <script type="text/javascript" src="{{asset('js/edit.js')}}"></script>
 @endsection
