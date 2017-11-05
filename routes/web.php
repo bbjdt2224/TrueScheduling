@@ -62,3 +62,9 @@ Route::get('/addVoulenteer/{id}', 'VoulenteerController@addEvent')->name('addVou
 Route::post('/addVoulenteer', 'VoulenteerController@add')->name('addVoulenteerEvent');
 
 Route::get('/openVoulenteer/{id}', 'VoulenteerController@open')->name('openVoulenteer');
+
+Route::post('/addVoulenteers', 'VoulenteerController@addVoulenteer')->name('addVoulenteers');
+
+Route::post('/changeSemester', 'HomeController@changeSemester')->name('changeSemester');
+
+Route::get('/noclasses', 'HomeController@noclasses')->name('noclasses');

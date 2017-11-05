@@ -18,9 +18,12 @@ class CreateUsersTable extends Migration
             $table->string('name');
             $table->string('email')->unique();
             $table->string('password');
-            $table->text('classes');
-            $table->text('work');
-            $table->text('clubs');
+            $table->text('fallclasses');
+            $table->text('fallwork');
+            $table->text('fallclubs');
+            $table->text('springclasses');
+            $table->text('springwork');
+            $table->text('springclubs');
             $table->string('groups')->default('0');
             $table->rememberToken();
             $table->timestamps();

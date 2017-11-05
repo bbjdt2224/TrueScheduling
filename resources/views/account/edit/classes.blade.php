@@ -8,15 +8,20 @@
 		$colors = array("Tomato", "DodgerBlue", "Violet", "MediumSeaGreen", "LightGray", "Orange", "SlateBlue", "Gray");
 	?>
 	<form action="{{route('classes')}}" method="post">
+		@if(session('semester') == 'fall')
+			<?php $s = $schedule->fallclasses;?>
+		@elseif(session('semester') == 'spring')
+			<?php $s = $schedule->springclasses;?>
+		@endif
 		{{ csrf_field()}}
-		@if($schedule != null)
+		@if($s != "")
 			<script>counter = -1;</script>
 			<?php $counter = 0;?>
-			@foreach(explode('|', $schedule->classes) as $class)
+			@foreach(explode('|', $s) as $class)
 				<?php
-					$split = explode('/', $class);
-					$days = explode(',', $split[0]);
-					$info = explode(',', $split[1]);
+						$split = explode('/', $class);
+						$days = explode(',', $split[0]);
+						$info = explode(',', $split[1]);
 				?>
 				<div id="class{{$counter}}" class="well">
 					<label>*Days:</label>
@@ -91,14 +96,14 @@
 				<div class="checkbox"><label><input type="checkbox" name="days[0][]" value="friday">Friday</label></div>
 				<div class="form-group">
 					<div class="row">
-						<div class="col-sm-2">
-							<label>*Start Time</label>
+						<div class="col-sm-2" style="text-align: right;">
+							<label>*Start Time:</label>
 						</div>
 						<div class="col-sm-2">
 							<input type="time" class="form-control" name="starttime[]">
 						</div>
-						<div class="col-sm-2">
-							<label>*End Time</label>
+						<div class="col-sm-2" style="text-align: right;">
+							<label>*End Time: </label>
 						</div>
 						<div class="col-sm-2">
 							<input type="time" class="form-control" name="endtime[]">

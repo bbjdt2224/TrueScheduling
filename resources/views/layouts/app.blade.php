@@ -1,3 +1,14 @@
+<?php
+    session_start();
+    if(session('semester') == null){
+        if(date('m', time()) < 6){
+            session(['semester' => 'spring']);
+        }
+        else{
+            session(['semester' => 'fall']);
+        }
+    }
+?>
 <!DOCTYPE html>
 <html lang="{{ app()->getLocale() }}">
 <head>
@@ -49,6 +60,22 @@
                             <li><a href="{{ route('login') }}">Login</a></li>
                             <li><a href="{{ route('register') }}">Register</a></li>
                         @else
+                            <li>
+                                <form class="navbar-form" action='{{route('changeSemester')}}' method='post' id="semester">
+                                    {{ csrf_field()}}
+                                    <div class="input-group">
+                                        <select name="semester" class="form-control" onchange="$('#semester').submit();">
+                                            @if(session('semester') == 'fall')
+                                                <option value = 'fall' selected="selected">Fall</option>
+                                                <option value = 'spring'>Spring</option>
+                                            @elseif(session('semester') == 'spring')
+                                                <option value = 'fall'>Fall</option>
+                                                <option value = 'spring' selected="selected">Spring</option>
+                                            @endif
+                                        </select>
+                                    </div>
+                                </form>
+                            </li>
                             <li class="dropdown">
                                 <a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button" aria-expanded="false">
                                     Groups<span class="caret"></span>

@@ -5,15 +5,26 @@
 		var counter = 0;
 	</script>
 	<form action="{{route('work')}}" method="post">
+		@if(session('semester') == 'fall')
+			<?php $s = $schedule->fallwork;?>
+		@elseif(session('semester') == 'spring')
+			<?php $s = $schedule->springwork;?>
+		@endif
 		{{ csrf_field()}}
-		@if($schedule->work != "-")
+		@if($s != "")
 			<script>counter = -1;</script>
 			<?php $counter = 0;?>
-			@foreach(explode('|', $schedule->work) as $shift)
+			@foreach(explode('|', $s) as $shift)
 				<?php
-					$split = explode('/', $shift);
-					$days = explode(',', $split[0]);
-					$info = explode(',', $split[1]);
+					if($shift != ""){
+						$split = explode('/', $shift);
+						$days = explode(',', $split[0]);
+						$info = explode(',', $split[1]);
+					}
+					else{
+						$days = array();
+						$info = array("", "", "");
+					}
 				?>
 				<div id="shift{{$counter}}" class="well">
 					<label>*Days:</label>

@@ -53,7 +53,13 @@ class HomeController extends Controller
                 $classes .= "|";
             }
         }
-        User::where('id', '=', Auth::id())->update(['classes' => $classes]);
+        if(session('semester') == 'fall'){
+            User::where('id', '=', Auth::id())->update(['fallclasses' => $classes]);
+        }
+        elseif(session('semester') == 'spring'){
+            User::where('id', '=', Auth::id())->update(['springclasses' => $classes]);
+        }
+        
 
         $schedule = User::where('id', '=', Auth::id())->first();
         return view('home', compact('schedule'));
@@ -72,9 +78,23 @@ class HomeController extends Controller
                 $work .= "|";
             }
         }
-        User::where('id', '=', Auth::id())->update(['work' => $work]);
+        if(session('semester') == 'fall'){
+            User::where('id', '=', Auth::id())->update(['fallwork' => $work]);
+        }
+        elseif(session('semester') == 'spring'){
+            User::where('id', '=', Auth::id())->update(['springwork' => $work]);
+        }
 
         $schedule = User::where('id', '=', Auth::id())->first();
         return view('home', compact('schedule'));
+    }
+
+    public function changeSemester(){
+        session(['semester' => request('semester')]);
+        return back();
+    }
+
+    public function noclasses(){
+        return view('account.noclasses');
     }
 }

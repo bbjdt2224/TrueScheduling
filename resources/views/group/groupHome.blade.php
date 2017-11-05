@@ -1,6 +1,33 @@
 @extends('layouts.app')
 
 @section('content')
+	<?php
+		function getDecimal($n){
+        	$whole = floor($n);
+        	return $n - $whole;
+        }
+
+        function timeToNumber($time){
+	       	$t = explode(':', $time);
+	       	$number = $t[0]+($t[1]/60);
+	       	return $number;
+	    }
+
+        function numberToTime($number){
+       		$hour = floor($number);
+       		$minute = (getDecimal($number)*60);
+       		if($minute == 0){
+       			$minute = "00";
+       		}
+       		$time = $hour.":".$minute;
+       		return $time;
+       }
+
+       function to12($n){
+       		$newtime = date("g:i a", strtotime($n));
+       		return $newtime;
+       }
+	?>
 	<div class="jumbotron">
 		<h1>{{$group->name}}</h1>
 		@if($group->open == 1 || $group->lead == Auth::id())
@@ -16,31 +43,43 @@
 	<br/>
 	<br/>
 	<ul class="nav nav-tabs">
-		@if($page == "pending")
+		@if($page == "message")
+			<li class="active"><a href="{{route('groupHome', ['id' => $group->id, 'page' => "message"])}}">Messages</a></li>
+			<li><a href="{{route('groupHome', ['id' => $group->id, 'page' => "pending"])}}">Pending Events</a></li>
+			<li><a href="{{route('groupHome', ['id' => $group->id, 'page' => "voulenteer"])}}">Voulenteering</a></li>
+	    	<li><a href="{{route('groupHome', ['id' => $group->id, 'page' => "upcoming"])}}">Upcoming Events</a></li>
+	    	<li><a href="{{route('groupHome', ['id' => $group->id, 'page' => "calendar"])}}">Calendar</a></li>
+	    	<li><a href="{{route('groupHome', ['id' => $group->id, 'page' => "group"])}}">Group Schedule</a></li>
+		@elseif($page == "pending")
+			<li><a href="{{route('groupHome', ['id' => $group->id, 'page' => "message"])}}">Messages</a></li>
 			<li class="active"><a href="{{route('groupHome', ['id' => $group->id, 'page' => "pending"])}}">Pending Events</a></li>
 			<li><a href="{{route('groupHome', ['id' => $group->id, 'page' => "voulenteer"])}}">Voulenteering</a></li>
 	    	<li><a href="{{route('groupHome', ['id' => $group->id, 'page' => "upcoming"])}}">Upcoming Events</a></li>
 	    	<li><a href="{{route('groupHome', ['id' => $group->id, 'page' => "calendar"])}}">Calendar</a></li>
 	    	<li><a href="{{route('groupHome', ['id' => $group->id, 'page' => "group"])}}">Group Schedule</a></li>
 	    @elseif($page == "voulenteer")
+	    	<li><a href="{{route('groupHome', ['id' => $group->id, 'page' => "message"])}}">Messages</a></li>
 			<li><a href="{{route('groupHome', ['id' => $group->id, 'page' => "pending"])}}">Pending Events</a></li>
 			<li class="active"><a href="{{route('groupHome', ['id' => $group->id, 'page' => "voulenteer"])}}">Voulenteering</a></li>
 	    	<li><a href="{{route('groupHome', ['id' => $group->id, 'page' => "upcoming"])}}">Upcoming Events</a></li>
 	    	<li><a href="{{route('groupHome', ['id' => $group->id, 'page' => "calendar"])}}">Calendar</a></li>
 	    	<li><a href="{{route('groupHome', ['id' => $group->id, 'page' => "group"])}}">Group Schedule</a></li>
 		@elseif($page == "upcoming")
+			<li><a href="{{route('groupHome', ['id' => $group->id, 'page' => "message"])}}">Messages</a></li>
 			<li><a href="{{route('groupHome', ['id' => $group->id, 'page' => "pending"])}}">Pending Events</a></li>
-			<li>><a href="{{route('groupHome', ['id' => $group->id, 'page' => "voulenteer"])}}">Voulenteering</a></li>
+			<li><a href="{{route('groupHome', ['id' => $group->id, 'page' => "voulenteer"])}}">Voulenteering</a></li>
 	    	<li class="active"><a href="{{route('groupHome', ['id' => $group->id, 'page' => "upcoming"])}}">Upcoming Events</a></li>
 	    	<li><a href="{{route('groupHome', ['id' => $group->id, 'page' => "calendar"])}}">Calendar</a></li>
 	    	<li><a href="{{route('groupHome', ['id' => $group->id, 'page' => "group"])}}">Group Schedule</a></li>
 	    @elseif($page == "calendar")
+	    	<li><a href="{{route('groupHome', ['id' => $group->id, 'page' => "message"])}}">Messages</a></li>
 	    	<li><a href="{{route('groupHome', ['id' => $group->id, 'page' => "pending"])}}">Pending Events</a></li>
 	    	<li><a href="{{route('groupHome', ['id' => $group->id, 'page' => "voulenteer"])}}">Voulenteering</a></li>
 	    	<li><a href="{{route('groupHome', ['id' => $group->id, 'page' => "upcoming"])}}">Upcoming Events</a></li>
 	    	<li class="active"><a href="{{route('groupHome', ['id' => $group->id, 'page' => "calendar"])}}">Calendar</a></li>
 	    	<li><a href="{{route('groupHome', ['id' => $group->id, 'page' => "group"])}}">Group Schedule</a></li>
 	    @elseif($page == "group")
+	    	<li><a href="{{route('groupHome', ['id' => $group->id, 'page' => "message"])}}">Messages</a></li>
 	    	<li><a href="{{route('groupHome', ['id' => $group->id, 'page' => "pending"])}}">Pending Events</a></li>
 	    	<li><a href="{{route('groupHome', ['id' => $group->id, 'page' => "voulenteer"])}}">Voulenteering</a></li>
 	    	<li><a href="{{route('groupHome', ['id' => $group->id, 'page' => "upcoming"])}}">Upcoming Events</a></li>
@@ -49,7 +88,17 @@
 	    @endif
 	  </ul>
 	  <br/>
-	  @if($page == "pending")
+	  @if($page == "message")
+	  	<form method="post">
+	  		<textarea name="message" class="form-control"></textarea>
+	  		<input type="hidden" name="group" value="{{$group->id}}">
+	  		<input type="hidden" name="id" value="{{Auth::id()}}">
+	  		<button type="submit" class="btn btn-primary">Post</button>
+	  	</form>
+	  	@foreach($messages->message as $message)
+
+	  	@endforeach
+	  @elseif($page == "pending")
 	  	<ul class="list-group">
 	  		@if(isset($futureevents->name))
 				<li class="list-group-item">
@@ -100,7 +149,7 @@
 							<div class="panel panel-default">
 								<div class="panel-heading">
 									<h4 class="panel-title">
-										<a data-toggle="collapse" href="#{{$event->id}}">{{$event->name}}</a>
+										<a data-toggle="collapse" href="#{{$event->id}}">{{$event->name}}<span style="float: right;"> {{date('m/d',strtotime($event->date))." | ".to12($event->starttime)}}</span></a>
 									</h4>
 								</div>
 								<div class="panel-collapse collapse" id="{{$event->id}}">
@@ -124,6 +173,7 @@
 				foreach($events as $event){
 					$dates[] = $event->date;
 					$names[] = $event->name;
+					$times[] = $event->starttime;
 					$descriptions[] = $event->description;
 					$j = 0;
 				}
@@ -162,7 +212,7 @@
 						@for($i = 1; $i <= $daysinmonth; $i ++)
 							@if($index = array_search(($endofdate.sprintf('%02d', $i)), $dates))
 								<td style="background-color: cyan;" id="{{($startdayofweek + $i - 1)}}">
-									<a href="#" data-toggle="popover" title="{{$names[$index]}}" data-content="{{$descriptions[$index]}}">
+									<a href="#" data-toggle="popover" title="{{$names[$index]." | ".to12($times[$index])}}" data-content="{{$descriptions[$index]}}">
 										{{sprintf('%02d', $i)}}
 									</a>
 								</td>
@@ -181,9 +231,9 @@
 				</tbody>
 			</table>
 		@elseif($page == 'group')
-			<form action="{{ route('groupHome', ['id' => $group->id, 'page' => 'group'])}}" method="post" class="form-inline">
+			<form action="{{ route('groupHome', ['id' => $group->id, 'page' => 'group'])}}" method="post" class="form-inline" id="groupschedule">
 				{{ csrf_field()}}
-				<select name='day' class="form-control">
+				<select name='day' class="form-control" onchange="$('#groupschedule').submit()">
 					@if($day == "Sunday")
 						<option selected="selected">Sunday</option>
 					@else
@@ -220,14 +270,19 @@
 						<option>Saturday</option>
 					@endif
 				</select>
-				<button type="submit" class="btn btn-primary">Change Day</button>
 			</form>
 			<?php
 				$memberarray = array();
 				$counter = 0;
 				foreach($members as $member){
 					$memberarray[$counter]["name"] = $member->name;
-					$classSchedule = explode('|', $member->classes);
+					if(session('semester') == 'fall'){
+						$classSchedule = explode('|', $member->fallclasses);
+					}
+					elseif(session('semester') == 'spring'){
+						$classSchedule = explode('|', $member->springclasses);
+					}
+					
 			        for($i = 0; $i < count($classSchedule); $i ++){
 			        	$split = explode('/', $classSchedule[$i]);
 			        	$days = explode(',', $split[0]);
@@ -238,32 +293,6 @@
 			        	}
 			        }
 			        $counter++;
-
-			        function getDecimal($n){
-			        	$whole = floor($n);
-			        	return $n - $whole;
-			        }
-
-			        function timeToNumber($time){
-				       	$t = explode(':', $time);
-				       	$number = $t[0]+($t[1]/60);
-				       	return $number;
-				    }
-
-			        function numberToTime($number){
-			       		$hour = floor($number);
-			       		$minute = (getDecimal($number)*60);
-			       		if($minute == 0){
-			       			$minute = "00";
-			       		}
-			       		$time = $hour.":".$minute;
-			       		return $time;
-			       }
-
-			       function to12($n){
-			       		$newtime = date("g:i a", strtotime($n));
-			       		return $newtime;
-			       }
 				}
 			?>
 			<table class="table">

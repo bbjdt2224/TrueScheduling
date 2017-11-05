@@ -2,6 +2,14 @@
 
 @section('content')
     <?php
+        if(session('semester') == null){
+            if(date('m', time()) < 6){
+                session(['semester' => 'spring']);
+            }
+            else{
+                session(['semester' => 'fall']);
+            }
+        }
         $sunday = array();
         $monday = array();
         $tuesday = array();
@@ -11,10 +19,19 @@
         $saturday = array();
         $begin = 24; 
         $end = 0;
-        $classSchedule = explode('|', $schedule->classes);
-        $workSchedule = explode('|', $schedule->work);
+        if(session('semester') == 'fall'){
+          $classSchedule = explode('|', $schedule->fallclasses);
+          $workSchedule = explode('|', $schedule->fallwork);
+        }
+        elseif(session('semester') == 'spring'){
+          $classSchedule = explode('|', $schedule->springclasses);
+          $workSchedule = explode('|', $schedule->springwork);
+        }
         $dayArray = array("sunday", "monday", "tuesday", "wednesday", "thursday", "friday", "saturday");
         for($i = 0; $i < count($classSchedule); $i ++){
+          if($classSchedule[0] == ""){
+            break;
+          }
         	$split = explode('/', $classSchedule[$i]);
         	$days = explode(',', $split[0]);
         	$info = explode(',', $split[1]); 
@@ -39,6 +56,9 @@
           }
         }
         for($i = 0; $i < count($workSchedule); $i ++){
+          if($workSchedule[0] == ""){
+            break;
+          }
           $split = explode('/', $workSchedule[$i]);
           $days = explode(',', $split[0]);
           $info = explode(',', $split[1]); 
@@ -62,7 +82,6 @@
             }
           }
         }
-
         function getDecimal($n){
         	$whole = floor($n);
         	return $n - $whole;
@@ -115,10 +134,10 @@
 						@foreach(${$week[$j]} as $times)
 							<?php  
 	    						$start = timeToNumber($times[0]);
-	    						$end = timeToNumber($times[1]);
+	    						$finish = timeToNumber($times[1]);
 	    					?>
     						@if($start == $i)
-    							<td style="background-color:{{$times[5]}};"><a href="#" data-toggle="modal" data-target="#{{$week[$j].floor($start)}}" style="color: black;">{{to12(numberToTime($start))."-".to12(numberToTime($end))}}</a></td>
+    							<td style="background-color:{{$times[5]}};"><a href="#" data-toggle="modal" data-target="#{{$week[$j].floor($start)}}" style="color: black;">{{to12(numberToTime($start))."-".to12(numberToTime($finish))}}</a></td>
     							<div id="{{$week[$j].floor($start)}}" class="modal fade" role="dialog">
 								  <div class="modal-dialog">
 								    <div class="modal-content">
@@ -128,7 +147,7 @@
 								      </div>
 								      <div class="modal-body">
 								        <p>{{$times[2]}}</p>
-								        <p>{{to12(numberToTime($start))."-".to12(numberToTime($end))}}</p>
+								        <p>{{to12(numberToTime($start))."-".to12(numberToTime($finish))}}</p>
 								        <p>{{$times[3]}}</p>
 								        <p>{{$times[4]}}</p>
 								      </div>
@@ -140,7 +159,7 @@
 								  </div>
 								</div>
     							<?php $isclass=1;?>
-    						@elseif($start < $i && $i <= $end)
+    						@elseif($start < $i && $i <= $finish)
     							<td style="background-color:{{$times[5]}}; border-top: none;"></td>
     							<?php $isclass=1;?>
     						@endif
