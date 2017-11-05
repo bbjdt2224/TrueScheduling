@@ -12,6 +12,7 @@ class MessagesController extends Controller
     {
         $this->middleware('auth');
         $this->middleware('getgroups');
+        $this->middleware('getpending');
     }
 
     public function post(){
@@ -19,7 +20,7 @@ class MessagesController extends Controller
     		'group' => request('group'),
     		'user' => request('id'),
     		'message' => request('message'),
-    	])
+    	]);
     	return back();
     }
 }

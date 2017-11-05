@@ -84,7 +84,12 @@
                                 <ul class="dropdown-menu">
                                     @if($groups != null)
                                         @foreach($groups as $group)
-                                            <li><a href='{{route('groupHome', ['id' => $group->id, 'page' => "pending"])}}'>{{$group->name}}</a></li>
+                                            <li>
+                                                <a href='{{route('groupHome', ['id' => $group->id, 'page' => "message"])}}'>{{$group->name}}
+                                                    <span class="badge">{{$unread[$group->id]}}</span>
+                                                </a>
+                                                
+                                            </li>
                                         @endforeach
                                     @endif
                                     <li><a href="{{route('join')}}">Join Group</a></li>

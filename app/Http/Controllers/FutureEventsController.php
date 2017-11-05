@@ -14,6 +14,7 @@ class FutureEventsController extends Controller
     {
     	$this->middleware('auth');
         $this->middleware('getgroups');
+        $this->middleware('getpending');
     }
 
     public function addEvent($id){

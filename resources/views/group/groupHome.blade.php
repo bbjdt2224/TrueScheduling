@@ -89,18 +89,36 @@
 	  </ul>
 	  <br/>
 	  @if($page == "message")
-	  	<form method="post">
+	  	<form method="post" action="{{route('addMessage')}}">
+	  		{{ csrf_field()}}
 	  		<textarea name="message" class="form-control"></textarea>
 	  		<input type="hidden" name="group" value="{{$group->id}}">
 	  		<input type="hidden" name="id" value="{{Auth::id()}}">
+	  		<br/>
 	  		<button type="submit" class="btn btn-primary">Post</button>
+	  		<br/>
+	  		<br/>
 	  	</form>
-	  	@foreach($messages->message as $message)
-
-	  	@endforeach
+	  	@if(isset($messages[0]->message))
+		  	@foreach($messages as $message)
+		  		<div class="well">
+		  			<h3>
+		  				{{$users[$message->user]}} 
+		  				<span style="font-size: 12pt;">Posted</span>
+		  				<span style="color: LightGray; font-size: 12pt;"><i>{{date('m/d/y', strtotime($message->created_at))}}</i></span>
+		  				<span style="color: LightGray; font-size: 12pt;"><i>{{date('g:m a', strtotime($message->created_at))}}</i></span>
+		  			</h3>
+		  			
+		  			<hr/>
+		  			<p>{{$message->message}}</p>
+		  		</div>
+		  	@endforeach
+		@else
+			<h3>There are no messages</h3>
+		@endif
 	  @elseif($page == "pending")
 	  	<ul class="list-group">
-	  		@if(isset($futureevents->name))
+	  		@if(!isset($futureevents[0]->name))
 				<li class="list-group-item">
 					There are no upcoming events
 				</li>
@@ -122,7 +140,7 @@
 		</ul>
 	  @elseif($page == "voulenteer")
 	  	<ul class="list-group">
-	  		@if(isset($voulenteers->name))
+	  		@if(!isset($voulenteers[0]->name))
 				<li class="list-group-item">
 					There are no voulenteering opportunities
 				</li>
@@ -139,7 +157,7 @@
 		</ul>
 	  @elseif($page == "upcoming")
 			<div class="panel-group">
-				@if(isset($events->name))
+				@if(!isset($events[0]->name))
 					<div class="panel panel-default">
 						There are no upcoming events
 					</div>

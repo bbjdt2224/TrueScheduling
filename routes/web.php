@@ -67,4 +67,4 @@ Route::post('/addVoulenteers', 'VoulenteerController@addVoulenteer')->name('addV
 
 Route::post('/changeSemester', 'HomeController@changeSemester')->name('changeSemester');
 
-Route::get('/noclasses', 'HomeController@noclasses')->name('noclasses');
+Route::post('/addMessage', 'MessagesController@post')->name('addMessage');
