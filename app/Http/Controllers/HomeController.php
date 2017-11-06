@@ -95,7 +95,17 @@ class HomeController extends Controller
         return back();
     }
 
-    public function noclasses(){
-        return view('account.noclasses');
+    public function editUser(){
+        return view('account.edit.user');
+    }
+
+    public function edit(){
+        $emaillist = 0;
+        if(request('emaillist') != null){
+            $emaillist = 1;
+        }
+        User::find(Auth::id())->update(['name'=>request('name'), 'email'=>request('email'), 'emaillist'=>$emaillist]);
+
+        return redirect(route('home'));
     }
 }

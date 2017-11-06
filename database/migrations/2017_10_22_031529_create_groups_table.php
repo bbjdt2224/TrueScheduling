@@ -21,6 +21,7 @@ class CreateGroupsTable extends Migration
             $table->string('groupmembers')->default(" ");
             $table->boolean('open')->default('0');
             $table->timestamps();
+            $table->softDeletes();
         });
     }
 

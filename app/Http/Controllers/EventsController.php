@@ -26,7 +26,8 @@ class EventsController extends Controller
     		'date' => request('date'),
     		'starttime' => request('time'),
     		'name' => request('name'),
-    		'description' => request('description'),
+    		'description' => request('description'),1
+            'creator' => Auth::id(),
     	]);
 
         if(request('future') == 1){

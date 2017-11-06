@@ -94,6 +94,7 @@
                                     @endif
                                     <li><a href="{{route('join')}}">Join Group</a></li>
                                     <li><a href="{{route('start')}}">Create Group</a></li>
+                                    <li><a href="{{route('deletedGroups')}}">Past Groups</a></li>
                                 </ul>
                             </li>
 
@@ -105,6 +106,9 @@
                                 <ul class="dropdown-menu" role="menu">
                                     <li>
                                         <a href="{{route('home')}}">Home</a>
+                                    </li>
+                                    <li>
+                                        <a href="{{route('editUser')}}">Edit</a>
                                     </li>
                                     <li>
                                         <a href="{{ route('logout') }}"

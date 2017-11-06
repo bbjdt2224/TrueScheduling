@@ -32,6 +32,9 @@
 		<h1>{{$group->name}}</h1>
 		@if($group->open == 1 || $group->lead == Auth::id())
 			<h3>Group Code: <span style="color:red">{{$group->code}}</span></h3>
+			@if($group->lead == Auth::id())
+				<a href="{{route('editGroup', ['id'=>$group->id])}}" class="btn btn-warning" style="float: right;">Edit Group</a>
+			@endif
 		@endif
 	</div>
 	<br/>
@@ -120,13 +123,13 @@
 	  	<ul class="list-group">
 	  		@if(!isset($futureevents[0]->name))
 				<li class="list-group-item">
-					There are no upcoming events
+					There are no pending events
 				</li>
 			@else
 				@foreach($futureevents as $event)
 					<li class="list-group-item" style="height: 60px;">
 						{{$event->name}}
-						@if($group->open == 1 || $group->lead == Auth::id())
+						@if($event->creator == Auth::id())
 							<a href="{{route('viewResults', ['id' => $event->id])}}" class="btn btn-primary" style="float:right;">View Results</a>
 						@endif
 						@if(!in_array(Auth::id(), explode(',', $event->responded)))
@@ -159,7 +162,9 @@
 			<div class="panel-group">
 				@if(!isset($events[0]->name))
 					<div class="panel panel-default">
-						There are no upcoming events
+						<div class="panel-heading">
+							There are no upcoming events
+						</div>
 					</div>
 				@else
 					@foreach($events as $event)
@@ -302,9 +307,15 @@
 					}
 					
 			        for($i = 0; $i < count($classSchedule); $i ++){
-			        	$split = explode('/', $classSchedule[$i]);
-			        	$days = explode(',', $split[0]);
-			        	$info = explode(',', $split[1]);
+			        	if($classSchedule[$i] != ""){
+							$split = explode('/', $classSchedule[$i]);
+				        	$days = explode(',', $split[0]);
+				        	$info = explode(',', $split[1]);
+						}
+						else{
+							$days = array();
+							$info = array("","","","","");
+						}
 			        	if(in_array(strtolower($day), $days)){
 			        		$memberarray[$counter][$i][] = $info[0];//start time
 				        	$memberarray[$counter][$i][] = $info[1];//end time

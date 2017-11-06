@@ -111,6 +111,11 @@
        		return $newtime;
        }
     ?>
+    
+    <a href="{{route('editClasses')}}" class="btn btn-primary">Edit Classes</a>
+    <a href="{{route('editWork')}}" class="btn btn-primary">Edit Work</a>
+    <a href="{{route('editClubs')}}" class="btn btn-primary">Edit Clubs</a>
+
     <table class="table">
     	<thead>
     		<th></th>
@@ -172,6 +177,4 @@
     		@endfor
     	</tbody>
     </table>
-    <a href="{{route('editClasses')}}" class="btn btn-primary">Edit Classes</a>
-    <a href="{{route('editWork')}}" class="btn btn-primary">Edit Work</a>
 @endsection

@@ -12,6 +12,6 @@ class FutureEvents extends Model
 	protected $dates = ['deleted_at'];
 
     protected $fillable = [
-        'group', 'days', 'times', 'name', 'description', 'responded', 'results',
+        'group', 'days', 'times', 'name', 'description', 'responded', 'results', 'creator',
     ];
 }

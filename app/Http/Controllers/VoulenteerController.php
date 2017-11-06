@@ -53,6 +53,7 @@ class VoulenteerController extends Controller
     		'name' => request('name'), 
     		'description' => request('description'),
             'voulenteers' => $shift,
+            'creator' => Auth::id(),
     	]);
     	return redirect(route('groupHome', ['id' => request('group'), 'page' => "voulenteer"]));
     }

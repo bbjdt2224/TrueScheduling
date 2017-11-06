@@ -20,6 +20,7 @@ class CreateEventsTable extends Migration
             $table->time('starttime');
             $table->string('name')->default(" ");
             $table->text('description')->nullable();
+            $table->integer('creator')->default('0');
             $table->timestamps();
             $table->softDeletes();
         });

@@ -12,7 +12,7 @@
 */
 
 Route::get('/', function () {
-    return view('welcome');
+    return redirect( route('login') );
 });
 
 Auth::routes();
@@ -23,9 +23,13 @@ Route::get('/editClasses', 'HomeController@editClasses')->name('editClasses');
 
 Route::get('/editwork', 'HomeController@editWork')->name('editWork');
 
+Route::get('/editclubs', 'HomeController@editClubs')->name('editClubs');
+
 Route::post('/classes', 'HomeController@changeClasses')->name('classes');
 
 Route::post('/work', 'HomeController@changeWork')->name('work');
+
+Route::post('/clubs', 'HomeController@changeClubs')->name('clubs');
 
 Route::get('/group/join', 'GroupsController@joinGroup')->name('join');
 
@@ -68,3 +72,17 @@ Route::post('/addVoulenteers', 'VoulenteerController@addVoulenteer')->name('addV
 Route::post('/changeSemester', 'HomeController@changeSemester')->name('changeSemester');
 
 Route::post('/addMessage', 'MessagesController@post')->name('addMessage');
+
+Route::get('/editUser', 'HomeController@editUser')->name('editUser');
+
+Route::post('/editUser', 'HomeController@edit')->name('userEdit');
+
+Route::get('/editGroup/{id}', 'GroupsController@editGroup')->name('editGroup');
+
+Route::post('/editGroup', 'GroupsController@edit')->name('groupEdit');
+
+Route::get('/deleteGroup/{id}', 'GroupsController@delete')->name('deleteGroup');
+
+Route::get('/deletedGroups', 'GroupsController@viewDeleted')->name('deletedGroups');
+
+Route::get('/reviveGroup/{id}', 'GroupsController@revive')->name('revive');

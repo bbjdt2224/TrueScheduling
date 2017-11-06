@@ -1,6 +1,21 @@
 @extends('layouts.app')
 
 @section('content')
+	<?php
+		$g = "";
+		foreach($groups as $gr){
+			if($gr->id == $event->group){
+				$g = $gr;
+			}
+		}
+	?>
+
+	<h3>
+    	<a href='{{route('groupHome', ['id' => $id, 'page' => "message"])}}'>
+    		<span class="glyphicon glyphicon-arrow-left"></span>
+    		{{$g->name}}
+    	</a>
+    </h3>
 	<form method='post' action='{{route('add')}}'>
 		{{ csrf_field()}}
 		<input type="hidden" name="group" value="{{$id}}">

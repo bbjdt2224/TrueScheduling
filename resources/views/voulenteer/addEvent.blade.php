@@ -9,6 +9,20 @@
 			background-color: #1E90FF;
 		}
 	</style>
+	<?php
+		$g = "";
+		foreach($groups as $gr){
+			if($gr->id == $event->group){
+				$g = $gr;
+			}
+		}
+	?>
+	<h3>
+    	<a href='{{route('groupHome', ['id' => $id, 'page' => "voulenteer"])}}'>
+    		<span class="glyphicon glyphicon-arrow-left"></span>
+    		{{$g->name}}
+    	</a>
+    </h3>
 	<form method='post' action='{{route('addVoulenteerEvent')}}' class="form-horizontal" id="form">
 		{{ csrf_field()}}
 		<div class="row">

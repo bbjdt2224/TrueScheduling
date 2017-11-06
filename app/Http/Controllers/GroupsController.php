@@ -88,7 +88,7 @@ class GroupsController extends Controller
     	}
     	User::find(Auth::id())->update(['groups' => $usergroups]);
 
-    	return redirect(route('groupHome', ['id' => $group->id, 'page' => "upcoming"]));
+    	return redirect(route('groupHome', ['id' => $group->id, 'page' => "message"]));
     }
 
     public function showHome($id, $page){
@@ -121,6 +121,59 @@ class GroupsController extends Controller
         }
 
         return view('group.groupHome', compact('group', 'events', 'page', 'members', 'day', 'futureevents'));
+    }
+
+    public function editGroup($id){
+        $group = Groups::find($id);
+        $members = array();
+        foreach(explode(',', $group->groupmembers) as $member){
+            $members[] = User::find($member);
+        }
+        return view('group.editGroup', compact('group', 'members'));
+    }
+
+    public function edit(){
+        $open = 0;
+        if(request('open') == "yes"){
+            $open = 1;
+        }
+        Groups::find(request('id'))->update(['name'=>request('groupname'), 'open'=>$open]);
+
+        return redirect(route('groupHome', ['id'=>request('id'), 'page'=>'message']));
+    }
+
+    public function delete($id){
+        $group = Groups::find($id);
+        foreach(explode(',', $group->groupmembers) as $member){
+            $user = User::find($member);
+            $groups = explode(',', $user->groups);
+            $index = array_search($id, $groups);
+            unset($groups[$index]);
+            $groups = array_values($groups);
+            $line = implode(',', $groups);
+            $user->update(['groups'=>$line]);
+        }
+        $group->delete();
+
+        return redirect(route('home'));
+    }
+
+    public function viewDeleted(){
+        $deleted = Groups::onlyTrashed()->where('lead', '=', Auth::id())->get();
+        return view('group.deleted', compact('deleted'));
+    }
+
+    public function revive($id){
+        $group = Groups::withTrashed()->find($id);
+        $group->restore();
+        foreach(explode(',', $group->groupmembers) as $member){
+            $user = User::find($member);
+            $groups = $user->groups;
+            $groups .= ','.$id;
+            $user->update(['groups'=>$groups]);
+        }
+
+        return redirect(route('groupHome', ['id'=>$id, 'page'=>'message']));
     }
 
 }

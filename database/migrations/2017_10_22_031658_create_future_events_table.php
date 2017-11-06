@@ -22,6 +22,7 @@ class CreateFutureEventsTable extends Migration
             $table->string('description')->nullable();
             $table->text('responded')->nullable();
             $table->text('results')->nullable();
+            $table->integer('creator')->default('0');
             $table->timestamps();
             $table->softDeletes();
         });

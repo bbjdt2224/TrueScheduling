@@ -58,6 +58,20 @@
 				removearr.push(rarray);
 			}
 		</script>
+		<?php
+			$g = "";
+			foreach($groups as $gr){
+				if($gr->id == $event->group){
+					$g = $gr;
+				}
+			}
+		?>
+		<h3>
+	    	<a href='{{route('groupHome', ['id' => $event->group, 'page' => "voulenteer"])}}'>
+	    		<span class="glyphicon glyphicon-arrow-left"></span>
+	    		{{$g->name}}
+	    	</a>
+	    </h3>
 		@for($i = 0; $i < count($days); $i ++)
 			<?php
 				$shiftCounter = 0;

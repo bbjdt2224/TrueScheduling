@@ -12,6 +12,6 @@ class Events extends Model
 	protected $dates = ['deleted_at'];
 	
     protected $fillable = [
-        'date', 'starttime', 'name', 'description', 'group',
+        'date', 'starttime', 'name', 'description', 'group', 'creator',
     ];
 }

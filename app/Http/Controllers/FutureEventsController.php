@@ -44,6 +44,7 @@ class FutureEventsController extends Controller
     		'times' => $times, 
     		'name' => request('name'), 
     		'description' => request('description'),
+            'creator' => Auth::id(),
     	]);
     	return redirect(route('groupHome', ['id' => request('group'), 'page' => "pending"]));
     }

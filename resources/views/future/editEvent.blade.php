@@ -47,7 +47,19 @@
 				$lateend = timeToNumber($ends[$i]);
 			}
 		}
+		$g = "";
+		foreach($groups as $gr){
+			if($gr->id == $event->group){
+				$g = $gr;
+			}
+		}
 	?>
+	<h3>
+    	<a href='{{route('groupHome', ['id' => $event->group, 'page' => "pending"])}}'>
+    		<span class="glyphicon glyphicon-arrow-left"></span>
+    		{{$g->name}}
+    	</a>
+    </h3>
 	<form method="post" action="{{route('edit')}}">
 		{{ csrf_field()}}
 		<input type="hidden" value="{{$event->days}}" name="dates">
@@ -69,11 +81,26 @@
 				@endforeach
 			</thead>
 			<tbody>
-				@foreach(explode('|', Auth::user()->classes) as $class)
+				@if(date('m', strtotime($day)) < 6)
 					<?php
-						$split = explode('/', $class);
-			        	$days = explode(',', $split[0]);
-			        	$info = explode(',', $split[1]);
+						$semester = 'springclasses';
+					?>
+				@else
+					<?php
+						$semester = 'fallclasses';
+					?>
+				@endif
+				@foreach(explode('|', Auth::user()->$semester) as $class)
+					<?php
+						if($class != ""){
+							$split = explode('/', $class);
+				        	$days = explode(',', $split[0]);
+				        	$info = explode(',', $split[1]);
+						}
+						else{
+							$days = array();
+							$info = array("","","","","");
+						}
 			        	for($i = 0; $i < count($dates); $i ++){
 			        		$lower = strtolower(date('l', strtotime($dates[$i])));
 			        		if(in_array($lower, $days)){
@@ -82,11 +109,26 @@
 			        	}
 					?>
 				@endforeach
-				@foreach(explode('|', Auth::user()->work) as $work)
+				@if(date('m', strtotime($day)) < 6)
 					<?php
-						$split = explode('/', $work);
-			        	$days = explode(',', $split[0]);
-			        	$info = explode(',', $split[1]);
+						$semester = 'springwork';
+					?>
+				@else
+					<?php
+						$semester = 'fallwork';
+					?>
+				@endif
+				@foreach(explode('|', Auth::user()->$semester) as $work)
+					<?php
+						if($work != ""){
+							$split = explode('/', $work);
+				        	$days = explode(',', $split[0]);
+				        	$info = explode(',', $split[1]);
+						}
+						else{
+							$days = array();
+							$info = array("", "");
+						}
 			        	for($i = 0; $i < count($dates); $i ++){
 			        		$lower = strtolower(date('l', strtotime($dates[$i])));
 			        		if(in_array($lower, $days)){

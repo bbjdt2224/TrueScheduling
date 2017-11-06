@@ -47,7 +47,19 @@
 				$lateend = timeToNumber($ends[$i]);
 			}
 		}
+		$g = "";
+		foreach($groups as $gr){
+			if($gr->id == $event->group){
+				$g = $gr;
+			}
+		}
 	?>
+	<h3>
+    	<a href='{{route('groupHome', ['id' => $event->group, 'page' => "pending"])}}'>
+    		<span class="glyphicon glyphicon-arrow-left"></span>
+    		{{$g->name}}
+    	</a>
+    </h3>
 	<form method="post" action="{{route('save')}}">
 		{{ csrf_field()}}
 		<input type="hidden" value="{{$event->days}}" name="dates">
