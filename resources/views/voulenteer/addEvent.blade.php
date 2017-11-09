@@ -12,7 +12,7 @@
 	<?php
 		$g = "";
 		foreach($groups as $gr){
-			if($gr->id == $event->group){
+			if($gr->id == $id){
 				$g = $gr;
 			}
 		}
@@ -63,7 +63,7 @@
 							@endfor
 							@for($i = 1; $i <= date('t', time()); $i ++)
 								<td>
-									<label id="{{$i+$firstday-1}}" onclick="addCheck(this, month, year);" class="btn btn-default">{{sprintf("%02d", $i)}}</label>
+									<label id="{{$i+$firstday-1}}" onclick="addCheck(this, month, year);" class="btn btn-default" style="font-size: 8pt;">{{sprintf("%02d", $i)}}</label>
 								</td>
 								@if( ($i+$firstday)%7 == 0)
 									</tr><tr>
@@ -94,9 +94,9 @@
 		<input type="hidden" name="dates" id="d" value=" ">
 		<input type="hidden" name="numofshifts" id="s" value=" ">
 		Number of People Per Time Slot
-		<input type="number" name="number" class="form-control">
+		<input type="number" name="number" class="form-control" required>
 		Event Name
-		<input type="text" name="name" class="form-control">
+		<input type="text" name="name" class="form-control" required>
 		<br>
 		Event Description
 		<textarea name="description" class="form-control"></textarea>

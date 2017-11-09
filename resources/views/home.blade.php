@@ -22,10 +22,12 @@
         if(session('semester') == 'fall'){
           $classSchedule = explode('|', $schedule->fallclasses);
           $workSchedule = explode('|', $schedule->fallwork);
+          $clubSchedule = explode('|', $schedule->fallclubs);
         }
         elseif(session('semester') == 'spring'){
           $classSchedule = explode('|', $schedule->springclasses);
           $workSchedule = explode('|', $schedule->springwork);
+          $clubSchedule = explode('|', $schedule->springclubs);
         }
         $dayArray = array("sunday", "monday", "tuesday", "wednesday", "thursday", "friday", "saturday");
         for($i = 0; $i < count($classSchedule); $i ++){
@@ -67,17 +69,44 @@
               if($info[1] < $info[0]){
                 $info[1] = numberToTime(timeToNumber($info[1]) + 24);
               }
-              ${$dayArray[$j]}[$i][] = $info[0];//start time
-              ${$dayArray[$j]}[$i][] = $info[1];//end time
-              ${$dayArray[$j]}[$i][] = "Work";//title
-              ${$dayArray[$j]}[$i][] = " ";//building
-              ${$dayArray[$j]}[$i][] = " ";//room
-              ${$dayArray[$j]}[$i][] = $info[2];//color
+              ${$dayArray[$j]}[$i+count($classSchedule)][] = $info[0];//start time
+              ${$dayArray[$j]}[$i+count($classSchedule)][] = $info[1];//end time
+              ${$dayArray[$j]}[$i+count($classSchedule)][] = "Work";//title
+              ${$dayArray[$j]}[$i+count($classSchedule)][] = " ";//building
+              ${$dayArray[$j]}[$i+count($classSchedule)][] = " ";//room
+              ${$dayArray[$j]}[$i+count($classSchedule)][] = $info[2];//color
               if(timeToNumber($info[0]) < $begin){
                 $begin = timeToNumber($info[0]);
               }
               if(timeToNumber($info[1]) > $end){
                 $end = timeToNumber($info[1]);
+              }
+            }
+          }
+        }
+        for($i = 0; $i < count($clubSchedule); $i ++){
+          if($clubSchedule[0] == ""){
+            break;
+          }
+          $split = explode('/', $clubSchedule[$i]);
+          $days = explode(',', $split[0]);
+          $info = explode(',', $split[1]); 
+          for($j = 0; $j < 7; $j ++){
+            if(in_array($dayArray[$j], $days)){
+              if($info[2] < $info[1]){
+                $info[2] = numberToTime(timeToNumber($info[2]) + 24);
+              }
+              ${$dayArray[$j]}[$i+count($classSchedule)+count($workSchedule)][] = $info[1];//start time
+              ${$dayArray[$j]}[$i+count($classSchedule)+count($workSchedule)][] = $info[2];//end time
+              ${$dayArray[$j]}[$i+count($classSchedule)+count($workSchedule)][] = $info[0];//title
+              ${$dayArray[$j]}[$i+count($classSchedule)+count($workSchedule)][] = " ";//building
+              ${$dayArray[$j]}[$i+count($classSchedule)+count($workSchedule)][] = " ";//room
+              ${$dayArray[$j]}[$i+count($classSchedule)+count($workSchedule)][] = $info[3];//color
+              if(timeToNumber($info[1]) < $begin){
+                $begin = timeToNumber($info[1]);
+              }
+              if(timeToNumber($info[2]) > $end){
+                $end = timeToNumber($info[2]);
               }
             }
           }
@@ -111,7 +140,7 @@
        		return $newtime;
        }
     ?>
-    
+
     <a href="{{route('editClasses')}}" class="btn btn-primary">Edit Classes</a>
     <a href="{{route('editWork')}}" class="btn btn-primary">Edit Work</a>
     <a href="{{route('editClubs')}}" class="btn btn-primary">Edit Clubs</a>
@@ -119,13 +148,13 @@
     <table class="table">
     	<thead>
     		<th></th>
-        <th>Sunday</th>
-    		<th>Monday</th>
-    		<th>Tuesday</th>
-    		<th>Wednesday</th>
-    		<th>Thursday</th>
-    		<th>Friday</th>
-        <th>Saturday</th>
+        <th>Su</th>
+    		<th>M</th>
+    		<th>T</th>
+    		<th>W</th>
+    		<th>Th</th>
+    		<th>F</th>
+        <th>Sa</th>
     	</thead>
     	<tbody>
     		@for($i = $begin; $i <= $end; $i+= 0.5)
@@ -141,7 +170,7 @@
 	    						$start = timeToNumber($times[0]);
 	    						$finish = timeToNumber($times[1]);
 	    					?>
-    						@if($start == $i)
+    						@if($start == $i && $isclass == 0)
     							<td style="background-color:{{$times[5]}};"><a href="#" data-toggle="modal" data-target="#{{$week[$j].floor($start)}}" style="color: black;">{{to12(numberToTime($start))."-".to12(numberToTime($finish))}}</a></td>
     							<div id="{{$week[$j].floor($start)}}" class="modal fade" role="dialog">
 								  <div class="modal-dialog">
@@ -164,7 +193,7 @@
 								  </div>
 								</div>
     							<?php $isclass=1;?>
-    						@elseif($start < $i && $i <= $finish)
+    						@elseif($start < $i && $i <= $finish && $isclass == 0)
     							<td style="background-color:{{$times[5]}}; border-top: none;"></td>
     							<?php $isclass=1;?>
     						@endif

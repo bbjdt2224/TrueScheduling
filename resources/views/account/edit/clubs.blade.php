@@ -23,7 +23,7 @@
 					}
 					else{
 						$days = array();
-						$info = array("", "", "");
+						$info = array("", "", "", "");
 					}
 				?>
 				<div id="club{{$counter}}" class="well">
@@ -66,7 +66,7 @@
 
 					<br/>
 					Club Name
-					<input type="text" name="name" class="form-control">
+					<input type="text" name="name[]" class="form-control" value="{{$info[0]}}">
 					<br/>
 
 					<div class="form-group">
@@ -75,17 +75,17 @@
 								<label>*Start Time</label>
 							</div>
 							<div class="col-sm-2">
-								<input type="time" class="form-control" name="starttime[]" value="{{$info[0]}}">
+								<input type="time" class="form-control" name="starttime[]" value="{{$info[1]}}">
 							</div>
 							<div class="col-sm-2">
 								<label>*End Time</label>
 							</div>
 							<div class="col-sm-2">
-								<input type="time" class="form-control" name="endtime[]" value="{{$info[1]}}">
+								<input type="time" class="form-control" name="endtime[]" value="{{$info[2]}}">
 							</div>
 						</div>
 					</div>
-					<input type="hidden" name="color[]" value="Grey">
+					<input type="hidden" name="color[]" value="Yellow">
 				</div>
 				<?php $counter++; ?>
 				<script>
@@ -104,7 +104,7 @@
 				<div class="checkbox"><label><input type="checkbox" name="days[0][]" value="saturday">Saturday</label></div>
 				<br/>
 				Club Name
-				<input type="text" name="name" class="form-control">
+				<input type="text" name="name[]" class="form-control">
 				<br/>
 				<div class="form-group">
 					<div class="row">
@@ -122,7 +122,7 @@
 						</div>
 					</div>
 				</div>
-				<input type="hidden" name="color[]" value="Grey">
+				<input type="hidden" name="color[]" value="Yellow">
 			</div>
 		@endif
 		<button type="button" class="btn btn-primary" onclick="counter=addClub(counter);">Add Meeting</button>

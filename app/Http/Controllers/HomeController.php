@@ -41,6 +41,11 @@ class HomeController extends Controller
         return view('account.edit.work', compact('schedule'));
     }
 
+    public function editClubs(){
+        $schedule = User::find(Auth::id());
+        return view('account.edit.clubs', compact('schedule'));
+    }
+
     public function changeClasses(){
         $classes = "";
         for($i = 0; $i < count(request('days')); $i ++){
@@ -84,6 +89,30 @@ class HomeController extends Controller
         }
         elseif(session('semester') == 'spring'){
             User::where('id', '=', Auth::id())->update(['springwork' => $work]);
+        }
+
+        $schedule = User::where('id', '=', Auth::id())->first();
+        return view('home', compact('schedule'));
+    }
+
+    public function changeClubs(){
+        $club = "";
+        for($i = 0; $i < count(request('days')); $i ++){
+            for($j = 0; $j < count(request('days')[$i])-1; $j++){
+                $club .= request('days')[$i][$j].",";
+            }
+            $club .= request('days')[$i][(count(request('days')[$i])-1)];
+            $club .= "/".request('name')[$i].','.request('starttime')[$i].",".request('endtime')[$i];
+            $club .= ",".request('color')[$i];
+            if($i < count(request('days'))-1){
+                $club .= "|";
+            }
+        }
+        if(session('semester') == 'fall'){
+            User::where('id', '=', Auth::id())->update(['fallclubs' => $club]);
+        }
+        elseif(session('semester') == 'spring'){
+            User::where('id', '=', Auth::id())->update(['springclubs' => $club]);
         }
 
         $schedule = User::where('id', '=', Auth::id())->first();

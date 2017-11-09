@@ -86,3 +86,9 @@ Route::get('/deleteGroup/{id}', 'GroupsController@delete')->name('deleteGroup');
 Route::get('/deletedGroups', 'GroupsController@viewDeleted')->name('deletedGroups');
 
 Route::get('/reviveGroup/{id}', 'GroupsController@revive')->name('revive');
+
+Route::get('/editSetEvent/{id}', 'EventsController@editEvent')->name('editSetEvent');
+
+Route::post('/editSetEvent', 'EventsController@edit')->name('setEventEdit');
+
+Route::get('/leaveGroup/{id}', 'GroupsController@leaveGroup')->name('leaveGroup');

@@ -6,6 +6,7 @@ use Illuminate\Http\Request;
 
 use App\Events;
 use App\FutureEvents;
+use Auth;
 
 class EventsController extends Controller
 {
@@ -26,7 +27,7 @@ class EventsController extends Controller
     		'date' => request('date'),
     		'starttime' => request('time'),
     		'name' => request('name'),
-    		'description' => request('description'),1
+    		'description' => request('description'),
             'creator' => Auth::id(),
     	]);
 
@@ -35,5 +36,21 @@ class EventsController extends Controller
         }
 
     	return redirect(route('groupHome', ['id' => request('group'), 'page' => "pending"]));
+    }
+
+    public function editEvent($id){
+        $event = Events::find($id);
+        return view('event.editEvent', compact('event'));
+    }
+
+    public function edit(){
+        Events::find(request('id'))->update([
+            'date'=>request('date'), 
+            'name'=>request('name'),
+            'starttime' => request('time'),
+            'description' => request('description')
+        ]);
+
+        return redirect(route('groupHome', ['id' => request('group'), 'page' => "upcoming"]));
     }
 }

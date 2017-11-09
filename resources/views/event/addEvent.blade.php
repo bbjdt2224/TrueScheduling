@@ -4,7 +4,7 @@
 	<?php
 		$g = "";
 		foreach($groups as $gr){
-			if($gr->id == $event->group){
+			if($gr->id == $id){
 				$g = $gr;
 			}
 		}
@@ -20,13 +20,13 @@
 		{{ csrf_field()}}
 		<input type="hidden" name="group" value="{{$id}}">
 		Date
-		<input type="date" name="date" class="form-control">
+		<input type="date" name="date" class="form-control" required>
 		<br/>
 		Time
-		<input type="time" name="time" class="form-control">
+		<input type="time" name="time" class="form-control" required>
 		<br/>
 		Event Name
-		<input type="text" name="name" class="form-control">
+		<input type="text" name="name" class="form-control" required>
 		<br>
 		Event Description
 		<textarea name="description" class="form-control"></textarea>

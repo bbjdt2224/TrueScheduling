@@ -176,4 +176,22 @@ class GroupsController extends Controller
         return redirect(route('groupHome', ['id'=>$id, 'page'=>'message']));
     }
 
+    public function leaveGroup($id){
+        $members = explode(',',Groups::find($id)->groupmembers);
+        $index = array_search(Auth::id(), $members);
+        unset($members[$index]);
+        $members = array_values($members);
+        $members = implode(',', $members);
+        Groups::find($id)->update(['groupmembers'=>$members]);
+
+        $groups = explode(',',Auth::user()->groups);
+        $index = array_search($id, $groups);
+        unset($groups[$index]);
+        $groups = array_values($groups);
+        $groups = implode(',', $groups);
+        User::find(Auth::id())->update(['groups'=>$groups]);
+
+        return redirect(route('home'));
+    }
+
 }

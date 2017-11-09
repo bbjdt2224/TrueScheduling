@@ -34,14 +34,18 @@
 			<h3>Group Code: <span style="color:red">{{$group->code}}</span></h3>
 			@if($group->lead == Auth::id())
 				<a href="{{route('editGroup', ['id'=>$group->id])}}" class="btn btn-warning" style="float: right;">Edit Group</a>
+			@else
+				<a href="{{route('leaveGroup', ['id'=>$group->id])}}" class="btn btn-danger" style="float: right;">Leave Group</a>
 			@endif
 		@endif
 	</div>
 	<br/>
 	@if($group->open == 1 || $group->lead == Auth::id())
-		<a href="{{route('addFutureEvent', ['id' => $group->id])}}" class="btn btn-primary">Plan Event</a>
-		<a href="{{route('addEvent', ['id' => $group->id])}}" class="btn btn-primary">Add Event</a>
-		<a href="{{route('addVoulenteer', ['id' => $group->id])}}" class="btn btn-primary">Ask for Voulenteers</a>
+		<div class="btn-group">
+			<a href="{{route('addFutureEvent', ['id' => $group->id])}}" class="btn btn-primary">Plan Event</a>
+			<a href="{{route('addEvent', ['id' => $group->id])}}" class="btn btn-primary">Add Event</a>
+			<a href="{{route('addVoulenteer', ['id' => $group->id])}}" class="btn btn-primary">Ask for Voulenteers</a>
+		</div>
 	@endif
 	<br/>
 	<br/>
@@ -171,8 +175,14 @@
 						@if(strtotime($event->date) >= time());
 							<div class="panel panel-default">
 								<div class="panel-heading">
-									<h4 class="panel-title">
-										<a data-toggle="collapse" href="#{{$event->id}}">{{$event->name}}<span style="float: right;"> {{date('m/d',strtotime($event->date))." | ".to12($event->starttime)}}</span></a>
+									<h4 class="panel-title" style="height: 40px;">
+										<a data-toggle="collapse" href="#{{$event->id}}">
+											{{$event->name}}
+											<a href="{{route('editSetEvent', ['id'=>$event->id])}}" class="btn btn-primary"style="float: right;">Edit</a>
+											<span style="float: right; margin-right: 1em;"> 
+												{{date('m/d',strtotime($event->date))." | ".to12($event->starttime)."  "}}
+											</span>
+										</a>
 									</h4>
 								</div>
 								<div class="panel-collapse collapse" id="{{$event->id}}">
@@ -219,13 +229,13 @@
 					<span style="float: right;" class="btn btn-default" id="nextMonth"> >> </span>
 				</caption>
 				<thead>
-					<th>Sunday</th>
-					<th>Monday</th>
-					<th>Tuesday</th>
-					<th>Wednesday</th>
-					<th>Thursday</th>
-					<th>Friday</th>
-					<th>Saturday</th>
+					<th>Su</th>
+					<th>M</th>
+					<th>T</th>
+					<th>W</th>
+					<th>Th</th>
+					<th>F</th>
+					<th>Sa</th>
 				</thead>
 				<tbody>
 					<tr>
@@ -301,9 +311,13 @@
 					$memberarray[$counter]["name"] = $member->name;
 					if(session('semester') == 'fall'){
 						$classSchedule = explode('|', $member->fallclasses);
+						$workSchedule = explode('|', $member->fallwork);
+						$clubSchedule = explode('|', $member->fallclubs);
 					}
 					elseif(session('semester') == 'spring'){
 						$classSchedule = explode('|', $member->springclasses);
+						$workSchedule = explode('|', $member->springwork);
+						$clubSchedule = explode('|', $member->springclubs);
 					}
 					
 			        for($i = 0; $i < count($classSchedule); $i ++){
@@ -321,42 +335,80 @@
 				        	$memberarray[$counter][$i][] = $info[1];//end time
 			        	}
 			        }
+			        for($i = 0; $i < count($workSchedule); $i ++){
+			        	if($workSchedule[$i] != ""){
+							$split = explode('/', $workSchedule[$i]);
+				        	$days = explode(',', $split[0]);
+				        	$info = explode(',', $split[1]);
+						}
+						else{
+							$days = array();
+							$info = array("","","","","");
+						}
+			        	if(in_array(strtolower($day), $days)){
+			        		if($info[1] < $info[0]){
+								$info[1] = numberToTime(timeToNumber($info[1]) + 24);
+							}
+			        		$memberarray[$counter][$i+count($classSchedule)][] = $info[0];//start time
+				        	$memberarray[$counter][$i+count($classSchedule)][] = $info[1];//end time
+			        	}
+			        }
+			        for($i = 0; $i < count($clubSchedule); $i ++){
+			        	if($clubSchedule[$i] != ""){
+							$split = explode('/', $clubSchedule[$i]);
+				        	$days = explode(',', $split[0]);
+				        	$info = explode(',', $split[1]);
+						}
+						else{
+							$days = array();
+							$info = array("","","","","");
+						}
+			        	if(in_array(strtolower($day), $days)){
+			        		if($info[2] < $info[1]){
+								$info[2] = numberToTime(timeToNumber($info[2]) + 24);
+							}
+			        		$memberarray[$counter][$i+count($classSchedule)+count($workSchedule)][] = $info[1];//start time
+				        	$memberarray[$counter][$i+count($classSchedule)+count($workSchedule)][] = $info[2];//end time
+			        	}
+			        }
 			        $counter++;
 				}
 			?>
-			<table class="table">
-				<thead>
-					<th>Time</th>
-					@foreach($memberarray as $member)
-						<th>{{$member["name"]}}</th>
-					@endforeach
-				</thead>
-				<tbody>
-					@for($i = 8; $i < 22; $i += 0.5)
-						<tr>
-							<td>{{to12(numberToTime($i))}}</td>
-							@foreach($memberarray as $member)
-								<?php $isclass = 0;?>
-								@foreach($member as $class)
-									@if(!is_string($class))
-										<?php
-											$start = timeToNumber($class[0]);
-				    						$end = timeToNumber($class[1]);
-				    					?>
-										@if($start <= $i && $i <= $end)
-											<td>x</td>
-											<?php $isclass = 1; ?>
+			<div class="table-responsive">
+				<table class="table">
+					<thead>
+						<th>Time</th>
+						@foreach($memberarray as $member)
+							<th>{{$member["name"]}}</th>
+						@endforeach
+					</thead>
+					<tbody>
+						@for($i = 8; $i < 22; $i += 0.5)
+							<tr>
+								<td>{{to12(numberToTime($i))}}</td>
+								@foreach($memberarray as $member)
+									<?php $isclass = 0;?>
+									@foreach($member as $class)
+										@if(!is_string($class))
+											<?php
+												$start = timeToNumber($class[0]);
+					    						$end = timeToNumber($class[1]);
+					    					?>
+											@if($start <= $i && $i <= $end)
+												<td>x</td>
+												<?php $isclass = 1; ?>
+											@endif
 										@endif
+									@endforeach
+									@if($isclass == 0)
+										<td></td>
 									@endif
 								@endforeach
-								@if($isclass == 0)
-									<td></td>
-								@endif
-							@endforeach
-						</tr>
-					@endfor
-				</tbody>
-			</table>
+							</tr>
+						@endfor
+					</tbody>
+				</table>
+			</div>
 		@endif
 		<script src="{{asset('js/calendar.js')}}"></script>
 @endsection

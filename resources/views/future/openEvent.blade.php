@@ -141,6 +141,34 @@
 			        	}
 					?>
 				@endforeach
+				@if(date('m', strtotime($day)) < 6)
+					<?php
+						$semester = 'springclubs';
+					?>
+				@else
+					<?php
+						$semester = 'fallclubs';
+					?>
+				@endif
+				@foreach(explode('|', Auth::user()->$semester) as $club)
+					<?php
+						if($club != ""){
+							$split = explode('/', $club);
+				        	$days = explode(',', $split[0]);
+				        	$info = explode(',', $split[1]);
+						}
+						else{
+							$days = array();
+							$info = array("","","","","");
+						}
+			        	for($i = 0; $i < count($dates); $i ++){
+			        		$lower = strtolower(date('l', strtotime($dates[$i])));
+			        		if(in_array($lower, $days)){
+			        			${$dates[$i]}[] = array($info[1], $info[2]);
+			        		}
+			        	}
+					?>
+				@endforeach
 				@for($i = $earlystart; $i <= $lateend; $i+= 0.5)
 					<tr>
 						<td>{{to12(numberToTime($i))}}</td>

@@ -12,7 +12,7 @@
 	<?php
 		$g = "";
 		foreach($groups as $gr){
-			if($gr->id == $event->group){
+			if($gr->id == $id){
 				$g = $gr;
 			}
 		}
@@ -64,7 +64,7 @@
 							@endfor
 							@for($i = 1; $i <= date('t', time()); $i ++)
 								<td>
-									<label id="{{$i+$firstday-1}}" onclick="addCheck(this, month, year);" class="btn btn-default">{{sprintf("%02d", $i)}}</label>
+									<label id="{{$i+$firstday-1}}" onclick="addCheck(this, month, year);" class="btn btn-default" style="font-size: 8pt;">{{sprintf("%02d", $i)}}</label>
 								</td>
 								@if( ($i+$firstday)%7 == 0)
 									</tr><tr>
@@ -96,11 +96,11 @@
 				<div class="row" id="same">
 					<div class="col-sm-2">From</div>
 					<div class="col-sm-10">
-						<input type="time" name="start[]" class="form-control">
+						<input type="time" name="start[]" class="form-control" required>
 					</div>
 					<div class="col-sm-2">To</div>
 					<div class="col-sm-10">
-						<input type="time" name="end[]" class="form-control">
+						<input type="time" name="end[]" class="form-control" required>
 						<br/>
 					</div>
 				</div>
@@ -110,7 +110,7 @@
 		<input type="hidden" name="dates" id="d" value=" ">
 		<br/>
 		Event Name
-		<input type="text" name="name" class="form-control">
+		<input type="text" name="name" class="form-control" required>
 		<br>
 		Event Description
 		<textarea name="description" class="form-control"></textarea>

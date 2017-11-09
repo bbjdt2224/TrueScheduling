@@ -5,6 +5,7 @@ namespace App\Http\Controllers;
 use Illuminate\Http\Request;
 
 use App\Voulenteer;
+use Auth;
 
 class VoulenteerController extends Controller
 {
