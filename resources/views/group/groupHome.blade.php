@@ -243,7 +243,10 @@
 							<td id="{{$i}}"></td>
 						@endfor
 						@for($i = 1; $i <= $daysinmonth; $i ++)
-							@if($index = array_search(($endofdate.sprintf('%02d', $i)), $dates))
+							@if(array_search(($endofdate.sprintf('%02d', $i)), $dates) !== false)
+								<?php
+									$index = array_search(($endofdate.sprintf('%02d', $i)), $dates);
+								?>
 								<td style="background-color: cyan;" id="{{($startdayofweek + $i - 1)}}">
 									<a href="#" data-toggle="popover" title="{{$names[$index]." | ".to12($times[$index])}}" data-content="{{$descriptions[$index]}}">
 										{{sprintf('%02d', $i)}}
