@@ -84,7 +84,7 @@
 					$start = $split[0];
 					$end = $split[1];
 				?>
-				{{$days[$i]}}
+				{{date('m-d-y', strtotime($days[$i]))}}
 				<br/>
 				{{to12($start)."-".to12($end)}}
 				<br/>
