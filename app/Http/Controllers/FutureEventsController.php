@@ -22,6 +22,14 @@ class FutureEventsController extends Controller
     }
 
     public function add(){
+        if(request('dates') == null){
+            return redirect()->back()->withErrors(['Please add dates']);
+        }
+        elseif(request('name') == null){
+            return redirect()->back()->withErrors(['Name is empty']);
+        }
+
+
     	$days = request('dates');
         $dates = explode(',', request('dates'));
     	$times = array();
@@ -105,6 +113,11 @@ class FutureEventsController extends Controller
         $results = implode('|', $resultsArray);
         FutureEvents::find(request('id'))->update(['results'=>$results]);
 
+        return redirect(route('groupHome', ['id' => request('group'), 'page' => "pending"]));
+    }
+
+    public function delete($id, $group){
+        FutureEvents::find($id)->delete();
         return redirect(route('groupHome', ['id' => request('group'), 'page' => "pending"]));
     }
 }

@@ -134,7 +134,13 @@
 					<li class="list-group-item" style="height: 60px;">
 						{{$event->name}}
 						@if($event->creator == Auth::id())
-							<a href="{{route('viewResults', ['id' => $event->id])}}" class="btn btn-primary" style="float:right;">View Results</a>
+							<a href="{{route('deleteFuture', ['id' => $event->id, 'group' => $group->id])}}" class="btn btn-danger" style="float: right;">
+								Delete Event
+							</a>
+							<a href="{{route('viewResults', ['id' => $event->id])}}" class="btn btn-primary" style="float:right;">
+								View Results
+							</a>
+							
 						@endif
 						@if(!in_array(Auth::id(), explode(',', $event->responded)))
 							<a href="{{route('openEvent', ['id' => $event->id])}}" class="btn btn-primary" style="float:right; width: 100px;">Open</a>
@@ -155,6 +161,11 @@
 				@foreach($voulenteers as $event)
 					<li class="list-group-item" style="height: 60px;">
 						{{$event->name}}
+							@if($event->creator == Auth::id())
+								<a href="{{route('deleteVoulenteer', ['id' => $event->id , 'group' => $group->id])}}" class="btn btn-danger" style="float: right;">
+									Delete Event
+								</a>
+							@endif
 							<a href="{{route('openVoulenteer', ['id' => $event->id])}}" class="btn btn-primary" style="float:right; width: 100px;">
 								Open
 							</a>
@@ -178,7 +189,14 @@
 									<h4 class="panel-title" style="height: 40px;">
 										<a data-toggle="collapse" href="#{{$event->id}}">
 											{{$event->name}}
-											<a href="{{route('editSetEvent', ['id'=>$event->id])}}" class="btn btn-primary"style="float: right;">Edit</a>
+											@if($event->creator == Auth::id())
+												<a href="{{route('deleteEvent', ['id' => $event->id, 'group' => $group->id])}}" class="btn btn-danger" style="float: right;">
+													Delete Event
+												</a>
+												<a href="{{route('editSetEvent', ['id'=>$event->id])}}" class="btn btn-primary"style="float: right;">
+													Edit
+												</a>
+											@endif
 											<span style="float: right; margin-right: 1em;"> 
 												{{date('m/d',strtotime($event->date))." | ".to12($event->starttime)."  "}}
 											</span>

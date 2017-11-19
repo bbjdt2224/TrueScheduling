@@ -22,6 +22,16 @@ class EventsController extends Controller
     }
 
     public function add(){
+        if(request('date') == null){
+            return redirect()->back()->withErrors(['Please add dates']);
+        }
+        elseif(request('time') == null){
+            return redirect()->back()->withErrors(['Start time is empty']);
+        }
+        elseif(request('name') == null){
+            return redirect()->back()->withErrors(['Name is empty']);
+        }
+
     	Events::create([
     		'group' => request('group'),
     		'date' => request('date'),
@@ -35,7 +45,7 @@ class EventsController extends Controller
             FutureEvents::find(request('id'))->delete();
         }
 
-    	return redirect(route('groupHome', ['id' => request('group'), 'page' => "pending"]));
+    	return redirect(route('groupHome', ['id' => request('group'), 'page' => "upcoming"]));
     }
 
     public function editEvent($id){
@@ -51,6 +61,11 @@ class EventsController extends Controller
             'description' => request('description')
         ]);
 
+        return redirect(route('groupHome', ['id' => request('group'), 'page' => "upcoming"]));
+    }
+
+    public function delete($id, $group){
+        Events::find($id)->delete();
         return redirect(route('groupHome', ['id' => request('group'), 'page' => "upcoming"]));
     }
 }

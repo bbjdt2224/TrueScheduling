@@ -92,3 +92,9 @@ Route::get('/editSetEvent/{id}', 'EventsController@editEvent')->name('editSetEve
 Route::post('/editSetEvent', 'EventsController@edit')->name('setEventEdit');
 
 Route::get('/leaveGroup/{id}', 'GroupsController@leaveGroup')->name('leaveGroup');
+
+Route::get('/deleteFuture/{group}/{id}', 'FutureEventsController@delete')->name('deleteFuture');
+
+Route::get('/deleteEvent/{group}/{id}', 'EventsController@delete')->name('deleteEvent');
+
+Route::get('/deleteVoulenteer/{group}/{id}', 'VoulenteerController@delete')->name('deleteVoulenteer');

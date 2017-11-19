@@ -23,6 +23,17 @@ class VoulenteerController extends Controller
     }
 
     public function add(){
+        if(request('dates') == null){
+            return redirect()->back()->withErrors(['Please add dates']);
+        }
+        elseif(request('number') == null){
+            return redirect()->back()->withErrors(['Number of shifts is empty']);
+        }
+        elseif(request('name') == null){
+            return redirect()->back()->withErrors(['Name is empty']);
+        }
+
+
     	$days = request('dates');
         $dates = explode(',', request('dates'));
         $shifts = explode(',', request('numofshifts')) ;
@@ -105,6 +116,11 @@ class VoulenteerController extends Controller
         }
         $s = implode('|', $s);
         Voulenteer::find(request('id'))->update(['voulenteers'=>$s]);
+        return redirect(route('groupHome', ['id' => request('group'), 'page' => "voulenteer"]));
+    }
+
+    public function delete($group, $id){
+        Voulenteer::find($id)->delete();
         return redirect(route('groupHome', ['id' => request('group'), 'page' => "voulenteer"]));
     }
 }

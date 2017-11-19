@@ -1,6 +1,9 @@
 @extends('layouts.app')
 
 @section('content')
+	@if($errors->any())
+        <h4 style="color: red;">{{$errors->first()}}</h4>
+    @endif
 	<?php
 		$g = "";
 		foreach($groups as $gr){

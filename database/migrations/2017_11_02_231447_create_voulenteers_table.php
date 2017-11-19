@@ -24,6 +24,7 @@ class CreateVoulenteersTable extends Migration
             $table->string('voulenteers')->nullable();
             $table->integer('creator')->default('0');
             $table->timestamps();
+            $table->softDeletes();
         });
     }
 
