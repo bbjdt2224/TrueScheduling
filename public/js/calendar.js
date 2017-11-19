@@ -22,7 +22,6 @@ $(document).ready(function(){
     			$("#"+((i+startDay)-1)).text("0"+i);
     			var index = 0;
     			if((index = dates.indexOf(year+'-'+(month+1)+"-0"+i)) >= 0){
-    				console.log(names[index]);
 	    			$("#"+((i+startDay)-1)).css('background-color', 'cyan');
 	    			$("#"+((i+startDay)-1)).html('<a href="#" data-toggle="popover" title="'+names[index]+'" data-content=" '+descriptions[index]+'">0'+i+'</a>');
 	    		}
@@ -30,7 +29,7 @@ $(document).ready(function(){
     		else{
     			$("#"+((i+startDay)-1)).text(i);
     			var index = 0;
-    			if(index = dates.indexOf(year+'-'+(month+1)+"-0"+i) >= 0){
+    			if((index = dates.indexOf(year+'-'+(month+1)+"-"+i)) >= 0){
 	    			$("#"+((i+startDay)-1)).css('background-color', 'cyan');
 	    			$("#"+((i+startDay)-1)).html('<a href="#" data-toggle="popover" title="'+names[index]+'" data-content="'+descriptions[index]+'">'+i+'</a>');
 	    		}
@@ -72,11 +71,11 @@ $(document).ready(function(){
     		}
     		else{
     			$("#"+((i+startDay)-1)).text(i);
-    			var index = 0;
-    			if(index = dates.indexOf(year+'-'+(month+1)+"-0"+i) >= 0){
-	    			$("#"+((i+startDay)-1)).css('background-color', 'cyan');
-	    			$("#"+((i+startDay)-1)).html('<a href="#" data-toggle="popover" title="'+names[index]+'" data-content="'+descriptions[index]+'">'+i+'</a>');
-	    		}
+                var index = 0;
+                if((index = dates.indexOf(year+'-'+(month+1)+"-"+i)) >= 0){
+                    $("#"+((i+startDay)-1)).css('background-color', 'cyan');
+                    $("#"+((i+startDay)-1)).html('<a href="#" data-toggle="popover" title="'+names[index]+'" data-content="'+descriptions[index]+'">'+i+'</a>');
+                }
     		}
     	}
     	$('#title').text(monthNames[month]+" "+year);

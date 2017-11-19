@@ -34,9 +34,27 @@
 			<h3>Group Code: <span style="color:red">{{$group->code}}</span></h3>
 			@if($group->lead == Auth::id())
 				<a href="{{route('editGroup', ['id'=>$group->id])}}" class="btn btn-warning" style="float: right;">Edit Group</a>
-			@else
-				<a href="{{route('leaveGroup', ['id'=>$group->id])}}" class="btn btn-danger" style="float: right;">Leave Group</a>
 			@endif
+		@endif
+		@if($group->lead != Auth::id())
+			<a href="#" class="btn btn-danger" data-toggle="modal" data-target="#leave" style="float: right;">Leave Group</a>
+			<div id="leave" class="modal fade" role="dialog">
+				<div class="modal-dialog">
+					<div class="modal-content">
+						<div class="modal-header">
+							<button type="button" class="close" data-dismiss="modal">&times;</button>
+							<h4 class="modal-title">Are you sure you want to be removed from the group?</h4>
+						</div>
+						<div class="modal-body">
+							<a href="{{route('leaveGroup', ['id'=>$group->id])}}" class="btn btn-default">Yes</a>
+							<button type="button" class="btn btn-default" data-dismiss="modal">No</button>
+						</div>
+						<div class="modal-footer">
+							<button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
+						</div>
+					</div>
+				</div>
+			</div>
 		@endif
 	</div>
 	<br/>
