@@ -7,8 +7,10 @@
 	<form action="{{route('work')}}" method="post">
 		@if(session('semester') == 'fall')
 			<?php $s = $schedule->fallwork;?>
+			<h1>Fall</h1>
 		@elseif(session('semester') == 'spring')
 			<?php $s = $schedule->springwork;?>
+			<h1>Spring</h1>
 		@endif
 		{{ csrf_field()}}
 		@if($s != "")

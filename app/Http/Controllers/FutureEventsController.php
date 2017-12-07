@@ -116,7 +116,7 @@ class FutureEventsController extends Controller
         return redirect(route('groupHome', ['id' => request('group'), 'page' => "pending"]));
     }
 
-    public function delete($id, $group){
+    public function delete($group, $id){;
         FutureEvents::find($id)->delete();
         return redirect(route('groupHome', ['id' => request('group'), 'page' => "pending"]));
     }

@@ -14,4 +14,8 @@ class Voulenteer extends Model
     protected $fillable = [
         'group', 'days', 'times', 'name', 'description', 'number', 'voulenteers', 'creator',
     ];
+
+    public function group(){
+    	return belongsTo('App\Groups');
+    }
 }

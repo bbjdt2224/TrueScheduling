@@ -14,4 +14,8 @@ class Events extends Model
     protected $fillable = [
         'date', 'starttime', 'name', 'description', 'group', 'creator',
     ];
+
+    public function group(){
+    	return belongsTo('App\Groups');
+    }
 }

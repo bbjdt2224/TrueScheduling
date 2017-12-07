@@ -95,10 +95,10 @@ function addCheck(cell, month, year){
 		selected.push(year+"-"+month+"-"+( $(cell).text()));
         shifts.push(1);
         if(v == 0){
-            $('#dates').append("<p id='"+year+"-"+month+"-"+( $(cell).text())+"'>"+$(cell).text()+"/"+month+"/"+year+"</p>");
+            $('#dates').append("<p id='"+year+"-"+month+"-"+( $(cell).text())+"'>"+month+"/"+$(cell).text()+"/"+year+"</p>");
         }
         else{
-            $('#dates').append("<p id='"+year+"-"+month+"-"+( $(cell).text())+"'>"+$(cell).text()+"/"+month+"/"+year+"<span style='float: right;' class='btn btn-default' data-id='day"+year+'-'+month+'-'+( $(cell).text())+"' onclick='removeTimes(this)'>-</span><span style='float: right;' class='btn btn-default' data-id='day"+year+'-'+month+'-'+( $(cell).text())+"' onclick='addTimes(this)'>+</span></p>");
+            $('#dates').append("<p id='"+year+"-"+month+"-"+( $(cell).text())+"'>"+month+"/"+$(cell).text()+"/"+year+"<span style='float: right;' class='btn btn-default' data-id='day"+year+'-'+month+'-'+( $(cell).text())+"' onclick='removeTimes(this)'>-</span><span style='float: right;' class='btn btn-default' data-id='day"+year+'-'+month+'-'+( $(cell).text())+"' onclick='addTimes(this)'>+</span></p>");
             
         }
 		if($('#times').val() != 0){

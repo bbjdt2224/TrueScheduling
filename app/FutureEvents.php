@@ -14,4 +14,8 @@ class FutureEvents extends Model
     protected $fillable = [
         'group', 'days', 'times', 'name', 'description', 'responded', 'results', 'creator',
     ];
+
+    public function group(){
+    	return belongsTo('App\Groups');
+    }
 }

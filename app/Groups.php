@@ -14,4 +14,20 @@ class Groups extends Model
     ];
 
     protected $dates = ['deleted_at'];
+
+    public function events(){
+    	return hasMany('App\Events');
+    }
+
+    public function future(){
+    	return hasMany('App\FutureEvents');
+    }
+
+    public function messages(){
+    	return hasMany('App\Messages');
+    }
+
+    public function voulenteer(){
+    	return hasMany('App\Voulenteer');
+    }
 }

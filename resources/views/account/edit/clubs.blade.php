@@ -7,8 +7,10 @@
 	<form action="{{route('clubs')}}" method="post">
 		@if(session('semester') == 'fall')
 			<?php $s = $schedule->fallclubs;?>
+			<h1>Fall</h1>
 		@elseif(session('semester') == 'spring')
 			<?php $s = $schedule->springclubs;?>
+			<h1>Spring</h1>
 		@endif
 		{{ csrf_field()}}
 		@if($s != "")

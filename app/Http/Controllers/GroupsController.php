@@ -93,7 +93,7 @@ class GroupsController extends Controller
 
     public function showHome($id, $page){
         $day = date('l', time());
-    	$events = Events::where('group', '=', $id)->get();
+    	$events = Events::where('group', '=', $id)->where('date', '>', date('Y-m-d', time()))->get();
         $futureevents = FutureEvents::where('group', '=', $id)->get();
         $voulenteers = Voulenteer::where('group', '=', $id)->get();
         $messages = Messages::where('group', '=', $id)->orderBy('created_at', 'desc')->get();

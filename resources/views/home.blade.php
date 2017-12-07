@@ -23,11 +23,13 @@
           $classSchedule = explode('|', $schedule->fallclasses);
           $workSchedule = explode('|', $schedule->fallwork);
           $clubSchedule = explode('|', $schedule->fallclubs);
+          echo "<h1>Fall</h1>";
         }
         elseif(session('semester') == 'spring'){
           $classSchedule = explode('|', $schedule->springclasses);
           $workSchedule = explode('|', $schedule->springwork);
           $clubSchedule = explode('|', $schedule->springclubs);
+          echo "<h1>Spring</h1>";
         }
         $dayArray = array("sunday", "monday", "tuesday", "wednesday", "thursday", "friday", "saturday");
         for($i = 0; $i < count($classSchedule); $i ++){
